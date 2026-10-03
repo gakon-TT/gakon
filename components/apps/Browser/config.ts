@@ -58,16 +58,6 @@ export const bookmarks: Bookmark[] = [
     url: "https://www.wikipedia.org/",
   },
   {
-    icon: "/System/Icons/Favicons/archive.webp",
-    name: "Internet Archive",
-    url: "https://archive.org/",
-  },
-  {
-    icon: "/System/Icons/webamp.webp",
-    name: "Winamp Skin Museum",
-    url: "https://skins.webamp.org/",
-  },
-  {
     icon: "/System/Icons/Favicons/aos.webp",
     name: "AaronOS",
     url: "https://aaronos.dev/",

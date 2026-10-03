@@ -298,50 +298,10 @@ const FAVORITES = [
     bg: "#ffffff",
   },
   {
-    name: "GitHub",
-    url: "https://github.com",
-    customIcon: (
-      <svg viewBox="0 0 24 24" width="28" height="28" fill="#ffffff">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-      </svg>
-    ),
-    bg: "#181717",
-  },
-  {
     name: "Dino Game",
     url: "chrome://dino",
     customIcon: <DinoLogo />,
     bg: "#f7f7f7",
-  },
-  {
-    name: "VnExpress",
-    url: "https://vnexpress.net",
-    customIcon: (
-      <span style={{ color: "#9f224e", fontSize: "17px", fontWeight: "800", letterSpacing: "-0.5px" }}>
-        VnE
-      </span>
-    ),
-    bg: "#ffffff",
-  },
-  {
-    name: "Internet Archive",
-    url: "https://archive.org/",
-    customIcon: (
-      <svg viewBox="0 0 24 24" width="28" height="28" fill="#ffffff">
-        <path d="M12 2 1 7v2h22V7L12 2zm1 8h-2v8h2v-8zm5 0h-2v8h2v-8zM6 10H4v8h2v-8zm16 10H2v2h20v-2z" />
-      </svg>
-    ),
-    bg: "#2b2b2e",
-  },
-  {
-    name: "Winamp",
-    url: "https://skins.webamp.org/",
-    customIcon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="#f5a623">
-        <path d="M13 2 3 14h8l-2 8 10-12h-8l2-8z" />
-      </svg>
-    ),
-    bg: "#1a1a1d",
   },
   {
     name: "Ga kon",
@@ -369,12 +329,6 @@ const READING_LIST = [
     source: "webkit.org",
     icon: "🛡️",
     url: "https://www.wikipedia.org/",
-  },
-  {
-    title: "Khám phá các trang web cổ điển trên Wayback",
-    source: "archive.org",
-    icon: "🏛️",
-    url: "https://archive.org/",
   },
 ];
 
