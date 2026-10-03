@@ -1,0 +1,167 @@
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTheme } from "styled-components";
+import {
+  celebrate,
+  CELEBRATIONS,
+  createCalendar,
+  type Calendar as ICalendar,
+} from "components/system/Taskbar/Calendar/functions";
+import { Down, Up } from "components/system/Taskbar/Calendar/Icons";
+import StyledCalendar from "components/system/Taskbar/Calendar/StyledCalendar";
+import useTaskbarItemTransition from "components/system/Taskbar/useTaskbarItemTransition";
+import Button from "styles/common/Button";
+import { FOCUSABLE_ELEMENT, PREVENT_SCROLL } from "utils/constants";
+import { haltEvent, hasFinePointer, label } from "utils/functions";
+import { spotlightEffect } from "utils/spotlightEffect";
+
+const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+type CalendarProps = {
+  toggleCalendar: (showCalendar?: boolean) => void;
+};
+
+const Calendar: FC<CalendarProps> = ({ toggleCalendar }) => {
+  const [date, setDate] = useState(() => new Date());
+  const [calendar, setCalendar] = useState<ICalendar>(() =>
+    createCalendar(date)
+  );
+  const today = useMemo(() => new Date(), []);
+  const isCurrentDate = useMemo(
+    () =>
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear(),
+    [date, today]
+  );
+  const changeMonth = useCallback(
+    (direction: number): void => {
+      const newDate = new Date(date);
+      const newMonth = newDate.getMonth() + direction;
+
+      newDate.setDate(1);
+      newDate.setMonth(newMonth);
+
+      const isCurrentMonth =
+        (newMonth === 12 ? 0 : newMonth === -1 ? 11 : newMonth) ===
+        today.getMonth();
+
+      if (isCurrentMonth) newDate.setDate(today.getDate());
+
+      setDate(newDate);
+      setCalendar(createCalendar(newDate));
+    },
+    [date, today]
+  );
+  const calendarRef = useRef<HTMLTableElement>(null);
+  const {
+    sizes: {
+      calendar: { maxHeight },
+    },
+  } = useTheme();
+  const calendarTransition = useTaskbarItemTransition(maxHeight, false);
+  const finePointer = useMemo(() => hasFinePointer(), []);
+  const spotlightCell = useCallback(
+    (tdRef: HTMLTableCellElement | null): void => {
+      if (finePointer && tdRef && !tdRef.classList.contains("today")) {
+        spotlightEffect(tdRef, true, 2, true);
+      }
+    },
+    [finePointer]
+  );
+
+  useEffect(() => {
+    const calendarElement = calendarRef.current;
+    const onBlur = ({ relatedTarget }: FocusEvent): void => {
+      if (relatedTarget instanceof HTMLElement) {
+        if (calendarElement?.contains(relatedTarget)) return;
+
+        const clockElement = document.querySelector("main>nav #clock");
+
+        if (
+          clockElement instanceof HTMLElement &&
+          (clockElement === relatedTarget ||
+            clockElement.contains(relatedTarget))
+        ) {
+          return;
+        }
+      }
+
+      toggleCalendar(false);
+    };
+
+    calendarElement?.addEventListener("focusout", onBlur);
+    calendarElement?.focus(PREVENT_SCROLL);
+
+    return () => calendarElement?.removeEventListener("focusout", onBlur);
+  }, [toggleCalendar]);
+
+  return (
+    calendar && (
+      <StyledCalendar
+        ref={calendarRef}
+        aria-label="Date and Time Information"
+        id="calendar"
+        onContextMenu={haltEvent}
+        role="dialog"
+        {...calendarTransition}
+        {...FOCUSABLE_ELEMENT}
+      >
+        <table>
+          <thead>
+            <tr>
+              <td colSpan={DAY_NAMES.length}>
+                <div>
+                  <header>
+                    {`${date.toLocaleString("default", {
+                      month: "long",
+                    })}, ${date.getFullYear()}`}
+                  </header>
+                  <nav role="presentation">
+                    <Button
+                      onClick={() => changeMonth(-1)}
+                      {...label("Previous")}
+                    >
+                      <Up />
+                    </Button>
+                    <Button onClick={() => changeMonth(1)} {...label("Next")}>
+                      <Down />
+                    </Button>
+                  </nav>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              {DAY_NAMES.map((dayName) => (
+                <th key={dayName} scope="col">
+                  {dayName}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className={isCurrentDate ? "curr" : undefined}>
+            {calendar?.map((week) => (
+              <tr key={week.toString()}>
+                {week.map(([day, type]) => (
+                  <td
+                    key={`${day}${type}`}
+                    ref={spotlightCell}
+                    aria-current={type === "today" ? "date" : undefined}
+                    className={type}
+                    onClick={(event) => {
+                      if (CELEBRATIONS[date.getMonth() + 1]?.[day]) {
+                        celebrate(event.clientX + 23, event.clientY + 20);
+                      }
+                    }}
+                  >
+                    {day}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </StyledCalendar>
+    )
+  );
+};
+
+export default memo(Calendar);

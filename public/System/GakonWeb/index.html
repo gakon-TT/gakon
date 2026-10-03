@@ -1,0 +1,1716 @@
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>gak0n_05</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="styles.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="three.r128.min.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #06020f;
+        }
+
+        main {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #06020f;
+        }
+
+        main::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        main::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-120px);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .glow-sm {
+            box-shadow: 0 0 15px rgba(217, 70, 239, 0.5), 0 0 5px rgba(0, 251, 251, 0.3);
+        }
+
+        .scanline-overlay {
+            background: linear-gradient(to bottom, transparent 50%, rgba(168, 85, 247, 0.04) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+        }
+
+        .scanline-bar {
+            position: absolute;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, rgba(217, 70, 239, 0.12) 50%, transparent);
+            animation: scanline 8s linear infinite;
+            z-index: 29;
+            pointer-events: none;
+            top: 0;
+        }
+
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Aurora orb blobs */
+        @keyframes orb-drift {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.18;
+            }
+
+            33% {
+                transform: translate(30px, -20px) scale(1.15);
+                opacity: 0.28;
+            }
+
+            66% {
+                transform: translate(-20px, 25px) scale(0.9);
+                opacity: 0.14;
+            }
+        }
+
+        @keyframes orb-drift2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.15;
+            }
+
+            40% {
+                transform: translate(-40px, 30px) scale(1.2);
+                opacity: 0.25;
+            }
+
+            70% {
+                transform: translate(25px, -35px) scale(0.85);
+                opacity: 0.12;
+            }
+        }
+
+        @keyframes orb-drift3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.12;
+            }
+
+            50% {
+                transform: translate(20px, 40px) scale(1.1);
+                opacity: 0.22;
+            }
+        }
+
+        @keyframes aurora-sweep {
+            0% {
+                background-position: 0% 50%;
+                opacity: 0.07;
+            }
+
+            50% {
+                background-position: 100% 50%;
+                opacity: 0.13;
+            }
+
+            100% {
+                background-position: 0% 50%;
+                opacity: 0.07;
+            }
+        }
+
+        .aurora-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(125deg,
+                    rgba(15, 5, 30, 0.0) 0%,
+                    rgba(168, 85, 247, 0.12) 20%,
+                    rgba(217, 70, 239, 0.10) 45%,
+                    rgba(0, 251, 251, 0.08) 70%,
+                    rgba(120, 0, 255, 0.08) 90%,
+                    rgba(15, 5, 30, 0.0) 100%);
+            background-size: 300% 300%;
+            animation: aurora-sweep 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            top: -150px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.20) 0%, transparent 70%);
+            animation: orb-drift 14s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 450px;
+            height: 450px;
+            bottom: -120px;
+            right: -100px;
+            background: radial-gradient(circle, rgba(120, 0, 255, 0.20) 0%, transparent 70%);
+            animation: orb-drift2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            top: 30%;
+            left: 60%;
+            background: radial-gradient(circle, rgba(0, 251, 251, 0.15) 0%, transparent 70%);
+            animation: orb-drift3 22s ease-in-out infinite;
+        }
+
+        .orb-4 {
+            width: 300px;
+            height: 300px;
+            bottom: 10%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            animation: orb-drift 20s ease-in-out infinite reverse;
+        }
+
+        /* Vignette darkening edges */
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center,
+                    transparent 40%,
+                    rgba(6, 2, 15, 0.6) 70%,
+                    rgba(6, 2, 15, 0.95) 100%);
+            pointer-events: none;
+        }
+
+        /* Binary rain scroll */
+        @keyframes bin-scroll {
+            from {
+                transform: translateY(-50%);
+            }
+
+            to {
+                transform: translateY(0%);
+            }
+        }
+
+        .binary-stream {
+            animation: bin-scroll 8s linear infinite;
+        }
+
+        /* Central Profile Styles */
+        .center-main-group {
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        @media (min-width: 1100px) and (min-height: 750px) {
+            .center-main-group {
+                transform: translateY(18px);
+            }
+        }
+
+        .mobile-particle-title-slot {
+            height: 52px;
+            margin-bottom: 4px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 640px) {
+            .mobile-particle-title-slot {
+                display: none !important;
+            }
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            padding: 2.5px;
+            background: linear-gradient(45deg, #00fbfb, #7800ff, #ff00b4, #00fbfb);
+            background-size: 300% 300%;
+            animation: gradient-shift 6s ease infinite;
+            box-shadow: 0 0 14px rgba(217, 70, 239, 0.45), inset 0 0 8px rgba(0, 251, 251, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (min-height: 580px) and (min-width: 800px) {
+            .avatar-container {
+                width: 76px;
+                height: 76px;
+                padding: 3px;
+            }
+        }
+
+        @media (min-height: 750px) and (min-width: 1100px) {
+            .avatar-container {
+                width: 86px;
+                height: 86px;
+                padding: 3.5px;
+                box-shadow: 0 0 18px rgba(217, 70, 239, 0.45), inset 0 0 10px rgba(0, 251, 251, 0.3);
+            }
+        }
+
+        /* Safe area support for notched phones */
+        @supports (padding: max(0px)) {
+            main {
+                padding-top: max(8px, env(safe-area-inset-top));
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
+                padding-left: max(8px, env(safe-area-inset-left));
+                padding-right: max(8px, env(safe-area-inset-right));
+            }
+        }
+
+        @keyframes gradient-shift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #06020f;
+        }
+
+        .hologram-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            display: inline-block;
+            background: linear-gradient(to right, #ffffff 0%, #00fbfb 50%, #ffffff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.6);
+            filter: drop-shadow(0 0 6px rgba(0, 251, 251, 0.6));
+            animation: shine-sweep 4s linear infinite, holo-flicker 6s infinite;
+            font-size: 1.05rem;
+            transition: font-size 0.3s ease;
+        }
+
+        @media (min-height: 600px) and (min-width: 800px) {
+            .hologram-text {
+                font-size: 1.15rem;
+            }
+        }
+
+        @media (min-height: 750px) and (min-width: 1100px) {
+            .hologram-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        @keyframes shine-sweep {
+            0% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        @keyframes holo-flicker {
+
+            0%,
+            19.999%,
+            22%,
+            62.999%,
+            64%,
+            64.999%,
+            70%,
+            100% {
+                opacity: 0.99;
+                filter: hue-rotate(0deg) saturate(1);
+            }
+
+            20%,
+            21.999%,
+            63%,
+            63.999%,
+            65%,
+            69.999% {
+                opacity: 0.5;
+                filter: hue-rotate(90deg) saturate(1.3);
+            }
+        }
+
+        .glass-card {
+            background: rgba(18, 7, 33, 0.45);
+            border: 1px solid rgba(217, 70, 239, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(6, 2, 15, 0.6), inset 0 0 12px rgba(0, 251, 251, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .player-widget {
+            width: 216px;
+            max-width: 86vw;
+            padding: 8px 12px;
+            margin-top: 6px;
+            border-radius: 12px;
+            background: rgba(14, 6, 28, 0.75);
+            border: 1px solid rgba(0, 251, 251, 0.28);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(0, 251, 251, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .player-widget:hover {
+            border-color: rgba(0, 251, 251, 0.45);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 251, 251, 0.15), inset 0 0 14px rgba(0, 251, 251, 0.12);
+        }
+
+        /* Explicit, crisp typography for player contents */
+        .player-user-name {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: #f1f5f9;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+        }
+
+        .player-verified-icon {
+            font-size: 11px !important;
+            color: #00fbfb;
+            margin-left: 2px;
+            vertical-align: middle;
+        }
+
+        .player-track-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            font-weight: 700;
+            color: #34d399;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 1px 0 0 0;
+            line-height: 1.2;
+        }
+
+        .player-artist-name {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 8px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.55);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .player-ctrl-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.65);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 2px;
+        }
+
+        .player-ctrl-btn:hover {
+            color: #00fbfb;
+            transform: scale(1.12);
+            filter: drop-shadow(0 0 6px #00fbfb);
+        }
+
+        .player-ctrl-btn:active {
+            transform: scale(0.9);
+        }
+
+        .player-play-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 251, 251, 0.12);
+            border: 1px solid rgba(0, 251, 251, 0.45);
+            color: #00fbfb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 8px rgba(0, 251, 251, 0.2);
+            padding: 0;
+        }
+
+        .player-play-btn:hover {
+            background: rgba(0, 251, 251, 0.25);
+            transform: scale(1.08);
+            box-shadow: 0 0 12px rgba(0, 251, 251, 0.5);
+        }
+
+        .player-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .player-time-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7.5px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 0.05em;
+            line-height: 1;
+        }
+
+        .player-track-bar-container {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .player-track-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00fbfb, #d946ef);
+            border-radius: 999px;
+            box-shadow: 0 0 6px rgba(0, 251, 251, 0.6);
+            transition: width 0.1s linear;
+        }
+
+        .player-art-wrap {
+            position: relative;
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            min-height: 26px;
+            max-width: 26px;
+            max-height: 26px;
+            flex-shrink: 0;
+            border-radius: 50%;
+        }
+
+        .player-art-img {
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            min-height: 26px;
+            max-width: 26px;
+            max-height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(0, 251, 251, 0.4);
+            display: block;
+            animation: disc-spin 8s linear infinite;
+        }
+
+        @keyframes disc-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .player-status-dot {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 6.5px;
+            height: 6.5px;
+            border-radius: 50%;
+            border: 1px solid #06020f;
+        }
+
+        .social-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(18, 7, 33, 0.6);
+            border: 1px solid rgba(217, 70, 239, 0.25);
+            color: rgba(243, 232, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .social-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        @media (min-height: 750px) and (min-width: 1100px) {
+            .social-btn {
+                width: 34px;
+                height: 34px;
+            }
+            .social-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        /* Responsive HUD Panels */
+        .hud-panel-left {
+            position: absolute;
+            left: 1rem;
+            top: 3.5rem;
+            bottom: 1.5rem;
+            width: 13.5rem; /* 216px */
+            max-height: calc(100vh - 5rem);
+            transition: all 0.3s ease;
+        }
+
+        .hud-panel-right {
+            position: absolute;
+            right: 1rem;
+            top: 3.5rem;
+            bottom: 1.5rem;
+            width: 13.5rem; /* 216px */
+            max-height: calc(100vh - 5rem);
+            transition: all 0.3s ease;
+        }
+
+        .hud-radar-box {
+            width: 6.25rem;
+            height: 6.25rem;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-height: 750px) and (min-width: 1100px) {
+            .hud-panel-left {
+                left: 2rem;
+                top: 5.5rem;
+                bottom: 5.5rem;
+                width: 16rem; /* 256px */
+            }
+            .hud-panel-right {
+                right: 2rem;
+                top: 5.5rem;
+                bottom: 5.5rem;
+                width: 16rem; /* 256px */
+            }
+            .hud-radar-box {
+                width: 8rem;
+                height: 8rem;
+            }
+        }
+
+        .social-btn:hover,
+        .social-btn:active {
+            color: #d946ef;
+            border-color: #00fbfb;
+            box-shadow: 0 0 15px rgba(217, 70, 239, 0.4), inset 0 0 8px rgba(0, 251, 251, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .paused {
+            animation-play-state: paused !important;
+        }
+
+        #volume-slider::-webkit-slider-runnable-track {
+            height: 4px;
+            background: rgba(0, 251, 251, 0.15);
+            border-radius: 2px;
+        }
+
+        #volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00fbfb;
+            cursor: pointer;
+            margin-top: -2px;
+            box-shadow: 0 0 8px #00fbfb;
+            transition: transform 0.1s;
+        }
+
+        #volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+
+        /* Custom Cyberpunk Bracket HUD Cursor Styles */
+        @media (pointer: fine) {
+
+            *,
+            *:before,
+            *:after {
+                cursor: none !important;
+            }
+
+            .custom-cursor-dot {
+                width: 4px;
+                height: 4px;
+                background-color: #00fbfb;
+                box-shadow: 0 0 6px #00fbfb, 0 0 12px rgba(0, 251, 251, 0.6);
+                border-radius: 50%;
+                position: fixed;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 10000;
+                transition: opacity 0.2s, background-color 0.2s, box-shadow 0.2s;
+            }
+
+            .custom-cursor-hud {
+                width: 24px;
+                height: 24px;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                transition: opacity 0.2s, width 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .custom-cursor-hud .corner {
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                border-color: #00fbfb;
+                border-style: solid;
+                transition: border-color 0.2s, border-width 0.2s;
+                filter: drop-shadow(0 0 2px rgba(0, 251, 251, 0.5));
+            }
+
+            .custom-cursor-hud .tl {
+                top: 0;
+                left: 0;
+                border-width: 1.5px 0 0 1.5px;
+            }
+
+            .custom-cursor-hud .tr {
+                top: 0;
+                right: 0;
+                border-width: 1.5px 1.5px 0 0;
+            }
+
+            .custom-cursor-hud .bl {
+                bottom: 0;
+                left: 0;
+                border-width: 0 0 1.5px 1.5px;
+            }
+
+            .custom-cursor-hud .br {
+                bottom: 0;
+                right: 0;
+                border-width: 0 1.5px 1.5px 0;
+            }
+
+            /* Hover state for interactive elements (Magenta theme match) */
+            .custom-cursor-dot.hovered {
+                background-color: #d946ef;
+                box-shadow: 0 0 8px #d946ef, 0 0 16px #d946ef;
+            }
+
+            .custom-cursor-hud.hovered {
+                width: 38px;
+                height: 38px;
+            }
+
+            .custom-cursor-hud.hovered .corner {
+                border-color: #d946ef;
+                border-width: 2px;
+                filter: drop-shadow(0 0 4px rgba(217, 70, 239, 0.6));
+            }
+
+            /* Click states (Magenta active) */
+            .custom-cursor-dot.clicked {
+                background-color: #ff00b4;
+                box-shadow: 0 0 12px #ff00b4, 0 0 24px #ff00b4;
+            }
+
+            .custom-cursor-hud.clicked {
+                width: 14px;
+                height: 14px;
+            }
+
+            .custom-cursor-hud.clicked .corner {
+                border-color: #ff00b4;
+                border-width: 2px;
+                filter: drop-shadow(0 0 5px rgba(255, 0, 180, 0.8));
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-surface font-body-md overflow-hidden selection:bg-accent-cyan/30 selection:text-accent-cyan">
+    <!-- Entry Gate Overlay -->
+    <div id="entry-gate"
+        class="fixed inset-0 bg-[#06020f]/95 z-[9999] flex flex-col items-center justify-center cursor-pointer select-none transition-opacity duration-1000 backdrop-blur-md">
+        <!-- High-tech UI elements inside the entry gate -->
+        <div
+            class="w-80 p-6 border border-primary-fixed/20 bg-[#0d061c]/70 rounded-xl shadow-2xl relative overflow-hidden backdrop-blur-sm text-center space-y-4">
+            <!-- Bracket corner accents -->
+            <div class="absolute top-2 left-2 text-primary-fixed-dim/40 text-[9px] font-code-sm tracking-wider">
+                SYSTEM_INIT</div>
+            <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary-fixed"></div>
+            <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary-fixed"></div>
+            <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary-fixed"></div>
+            <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary-fixed"></div>
+
+            <div class="flex flex-col items-center justify-center mt-2">
+                <span class="material-symbols-outlined text-primary-fixed text-4xl animate-pulse"
+                    id="gate-icon">fingerprint</span>
+            </div>
+
+            <div class="space-y-1">
+                <h3 class="font-label-md text-[13px] text-primary-fixed uppercase tracking-[0.2em] font-bold">DECRYPTING
+                    SYNC LINK</h3>
+                <p class="font-code-sm text-[10px] text-on-surface/40 uppercase tracking-widest">PROTOCOL: GA_KON_v1.0.4
+                </p>
+            </div>
+
+            <!-- Custom simulated loading bar -->
+            <div
+                class="w-full bg-[#170a2b] border border-primary-fixed/15 h-3 rounded p-[2px] relative overflow-hidden">
+                <div id="gate-loading-progress"
+                    class="h-full bg-gradient-to-r from-primary-fixed-dim to-accent-cyan rounded-sm transition-all duration-300 ease-out"
+                    style="width: 0%;"></div>
+            </div>
+
+            <div id="gate-prompt"
+                class="font-code-sm text-[9px] text-accent-cyan tracking-[0.15em] uppercase animate-pulse">CONNECTING
+                SECURE CHANNEL...</div>
+        </div>
+    </div>
+    <main
+        class="relative min-h-screen h-[100dvh] w-full flex flex-col items-center justify-center py-4 overflow-hidden bg-[#06020f]">
+        <!-- Video Background -->
+        <video id="background-video" autoplay loop muted playsinline preload="none"
+            class="absolute inset-0 w-full h-full object-cover z-0 opacity-60 pointer-events-none">
+            <source data-src="background-optimized.webm" type="video/webm">
+            <source data-src="background-optimized.mp4" type="video/mp4">
+        </video>
+        <!-- Interactive 3D Particle Scene -->
+        <div class="absolute inset-0 w-full h-full z-[1] bg-transparent" id="threejs-container-ANIMATION_1"></div>
+        <script>
+            (function () {
+                const container = document.getElementById('threejs-container-ANIMATION_1');
+                const width = container.clientWidth || window.innerWidth;
+                const height = container.clientHeight || window.innerHeight;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+                camera.position.z = 130;
+
+                const isLowPowerDevice = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+                    || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !isLowPowerDevice, powerPreference: 'high-performance' });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowPowerDevice ? 1.25 : 2));
+                container.appendChild(renderer.domElement);
+
+                const mouse = { x: 0, y: 0, active: false };
+
+                function generatePoints(isMob) {
+                    const textCanvas = document.createElement('canvas');
+                    const ctx = textCanvas.getContext('2d');
+                    textCanvas.width = 1024;
+                    textCanvas.height = 512;
+                    ctx.fillStyle = 'white';
+                    ctx.textBaseline = 'middle';
+                    ctx.textAlign = 'center';
+
+                    let zJitter;
+                    if (isMob) {
+                        // Mobile: High-clarity Inter font with letter-spacing and tight z-jitter
+                        if ('letterSpacing' in ctx) {
+                            ctx.letterSpacing = '6px';
+                        }
+                        ctx.font = '800 230px "Inter", "Segoe UI", -apple-system, sans-serif';
+                        ctx.fillText('Ga kon', 512, 256);
+                        zJitter = 2.5;
+                    } else {
+                        // Desktop: Exactly original bold sans-serif with original deep z-jitter
+                        ctx.font = 'bold 240px sans-serif';
+                        ctx.fillText('Ga kon', 512, 256);
+                        zJitter = 15;
+                    }
+
+                    const step = isLowPowerDevice ? 4 : 3;
+                    const imageData = ctx.getImageData(0, 0, 1024, 512).data;
+                    const rawPoints = [];
+                    let minX = 1024, maxX = 0;
+
+                    for (let y = 0; y < 512; y += step) {
+                        for (let x = 0; x < 1024; x += step) {
+                            const alpha = imageData[(y * 1024 + x) * 4 + 3];
+                            if (alpha > 128) {
+                                rawPoints.push({ x, y, z: (Math.random() - 0.5) * zJitter });
+                                if (x < minX) minX = x;
+                                if (x > maxX) maxX = x;
+                            }
+                        }
+                    }
+
+                    const halfTextSpan = Math.max(512 - minX, maxX - 512) || 360;
+                    return rawPoints.map(pt => ({
+                        x: (pt.x - 512) / halfTextSpan,
+                        y: (256 - pt.y) / halfTextSpan,
+                        z: pt.z
+                    }));
+                }
+
+                const mobilePoints = generatePoints(true);
+                const desktopPoints = generatePoints(false);
+                const maxPoints = Math.max(mobilePoints.length, desktopPoints.length);
+
+                const positions = new Float32Array(maxPoints * 3);
+                const initialPositions = new Float32Array(maxPoints * 3);
+                const colors = new Float32Array(maxPoints * 3);
+                const particlePhases = new Float32Array(maxPoints);
+
+                let activeIsMob = width < 640;
+                let normPoints = activeIsMob ? mobilePoints : desktopPoints;
+                let particleCount = normPoints.length;
+
+                let geometry = null;
+
+                function setupParticlesForMode(isMob) {
+                    normPoints = isMob ? mobilePoints : desktopPoints;
+                    particleCount = normPoints.length;
+                    for (let i = 0; i < particleCount; i++) {
+                        const pt = normPoints[i];
+                        const normX0 = Math.max(0, Math.min(1, (pt.x + 1) / 2));
+                        const hue0 = 0.5 + normX0 * 0.333;
+                        const c0 = new THREE.Color().setHSL(hue0, 1.0, 0.58);
+                        colors[i * 3] = c0.r;
+                        colors[i * 3 + 1] = c0.g;
+                        colors[i * 3 + 2] = c0.b;
+                        particlePhases[i] = Math.random() * Math.PI * 2;
+                    }
+                    if (geometry) {
+                        geometry.setDrawRange(0, particleCount);
+                        geometry.attributes.color.needsUpdate = true;
+                    }
+                }
+
+                setupParticlesForMode(activeIsMob);
+
+                // Dynamically calculate particle layout to fit screen and match layout
+                const updateTextDimensions = () => {
+                    const w = container.clientWidth || window.innerWidth;
+                    const h = container.clientHeight || window.innerHeight;
+                    const isMob = w < 640;
+
+                    if (isMob !== activeIsMob) {
+                        activeIsMob = isMob;
+                        setupParticlesForMode(isMob);
+                    }
+
+                    camera.position.z = 130;
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+
+                    const halfHeight = Math.tan((camera.fov * Math.PI / 180) / 2) * camera.position.z;
+                    const pxToWorld = (2 * halfHeight) / h;
+
+                    const avatarEl = document.querySelector('.avatar-container');
+                    const mobileTitleSlot = document.querySelector('.mobile-particle-title-slot');
+                    let textCenterPixelY;
+                    let targetWidthPx;
+
+                    if (isMob) {
+                        // On mobile: position Ga kon clearly above the avatar in its dedicated hero slot
+                        if (mobileTitleSlot) {
+                            const sRect = mobileTitleSlot.getBoundingClientRect();
+                            textCenterPixelY = sRect.top + sRect.height / 2;
+                        } else if (avatarEl) {
+                            const aRect = avatarEl.getBoundingClientRect();
+                            textCenterPixelY = aRect.top - 50;
+                        } else {
+                            textCenterPixelY = h * 0.22;
+                        }
+                        targetWidthPx = Math.min(w * 0.82, 315);
+                        if (material) {
+                            material.size = 1.15;
+                        }
+                    } else {
+                        // On desktop / Safari:
+                        if (avatarEl) {
+                            const rect = avatarEl.getBoundingClientRect();
+                            textCenterPixelY = rect.top + rect.height / 2;
+                        } else {
+                            textCenterPixelY = h * 0.35;
+                        }
+                        const isCompact = h < 720 || w < 1100;
+                        if (isCompact) {
+                            targetWidthPx = Math.min(w * 0.42, 380);
+                            if (material) {
+                                material.size = 1.35;
+                            }
+                        } else {
+                            targetWidthPx = Math.min(w * 0.56, 620);
+                            if (material) {
+                                material.size = 2.0;
+                            }
+                        }
+                    }
+
+                    const halfTextWorldWidth = (targetWidthPx * pxToWorld) / 2;
+                    const normCenterY = -(textCenterPixelY / h) * 2 + 1;
+                    const textCenterY = normCenterY * halfHeight;
+
+                    for (let i = 0; i < particleCount; i++) {
+                        const pt = normPoints[i];
+                        initialPositions[i * 3] = pt.x * halfTextWorldWidth;
+                        initialPositions[i * 3 + 1] = pt.y * halfTextWorldWidth + textCenterY;
+                        initialPositions[i * 3 + 2] = pt.z;
+                    }
+                };
+
+                const material = new THREE.PointsMaterial({
+                    size: (width < 640) ? 1.15 : (height < 720 || width < 1100 ? 1.35 : 2.0),
+                    vertexColors: true,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending,
+                    opacity: 0.9
+                });
+
+                updateTextDimensions();
+
+                // Initial particle explosion animation towards initial positions
+                for (let i = 0; i < particleCount; i++) {
+                    positions[i * 3] = initialPositions[i * 3] + (Math.random() - 0.5) * 300;
+                    positions[i * 3 + 1] = initialPositions[i * 3 + 1] + (Math.random() - 0.5) * 300;
+                    positions[i * 3 + 2] = initialPositions[i * 3 + 2] + (Math.random() - 0.5) * 300;
+                }
+
+                geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setDrawRange(0, particleCount);
+
+                const particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+
+                const bgGeometry = new THREE.BufferGeometry();
+                const bgParticleCount = isLowPowerDevice ? 700 : 1400;
+                const bgPositions = new Float32Array(bgParticleCount * 3);
+                const bgColors = new Float32Array(bgParticleCount * 3);
+                for (let i = 0; i < bgParticleCount; i++) {
+                    bgPositions[i * 3] = (Math.random() - 0.5) * 1000;
+                    bgPositions[i * 3 + 1] = (Math.random() - 0.5) * 1000;
+                    bgPositions[i * 3 + 2] = (Math.random() - 0.5) * 500 - 200;
+                    const starHue = 0.5 + Math.random() * 0.35;
+                    const sc = new THREE.Color().setHSL(starHue, 0.9, 0.6 + Math.random() * 0.3);
+                    bgColors[i * 3] = sc.r; bgColors[i * 3 + 1] = sc.g; bgColors[i * 3 + 2] = sc.b;
+                }
+                bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
+                bgGeometry.setAttribute('color', new THREE.BufferAttribute(bgColors, 3));
+                const bgMaterial = new THREE.PointsMaterial({ size: 1.4, vertexColors: true, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
+                const bgParticles = new THREE.Points(bgGeometry, bgMaterial);
+                scene.add(bgParticles);
+
+                // Outer ring / nebula particles drifting in orbit
+                const ringGeo = new THREE.BufferGeometry();
+                const ringCount = isLowPowerDevice ? 150 : 300;
+                const ringPos = new Float32Array(ringCount * 3);
+                const ringCol = new Float32Array(ringCount * 3);
+                for (let i = 0; i < ringCount; i++) {
+                    const angle = (i / ringCount) * Math.PI * 2;
+                    const r = 200 + (Math.random() - 0.5) * 120;
+                    ringPos[i * 3] = Math.cos(angle) * r;
+                    ringPos[i * 3 + 1] = (Math.random() - 0.5) * 80;
+                    ringPos[i * 3 + 2] = Math.sin(angle) * r * 0.4 - 100;
+                    const rc = new THREE.Color().setHSL(0.5 + Math.random() * 0.3, 1.0, 0.55);
+                    ringCol[i * 3] = rc.r; ringCol[i * 3 + 1] = rc.g; ringCol[i * 3 + 2] = rc.b;
+                }
+                ringGeo.setAttribute('position', new THREE.BufferAttribute(ringPos, 3));
+                ringGeo.setAttribute('color', new THREE.BufferAttribute(ringCol, 3));
+                const ringMat = new THREE.PointsMaterial({ size: 2.5, vertexColors: true, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+                const ringParticles = new THREE.Points(ringGeo, ringMat);
+                scene.add(ringParticles);
+
+                const raycaster = new THREE.Raycaster();
+                const mouseVec = new THREE.Vector2();
+                const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+                const mouseTarget = new THREE.Vector3();
+
+                window.addEventListener('mousemove', (e) => {
+                    if (window.innerWidth >= 640 || (window.matchMedia && window.matchMedia('(pointer: fine)').matches)) {
+                        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                        mouse.active = true;
+                    }
+                }, { passive: true });
+
+                document.addEventListener('mouseleave', () => {
+                    mouse.active = false;
+                });
+
+                const handleTouch = (touch) => {
+                    mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+                    mouse.active = true;
+                };
+                window.addEventListener('touchstart', (e) => {
+                    if (e.touches && e.touches.length > 0) handleTouch(e.touches[0]);
+                }, { passive: true });
+                window.addEventListener('touchmove', (e) => {
+                    if (e.touches && e.touches.length > 0) handleTouch(e.touches[0]);
+                }, { passive: true });
+                window.addEventListener('touchend', () => {
+                    mouse.active = false;
+                }, { passive: true });
+                window.addEventListener('touchcancel', () => {
+                    mouse.active = false;
+                }, { passive: true });
+
+                let lastFrameTime = 0;
+                let frameNumber = 0;
+                const animate = (frameTime = 0) => {
+                    requestAnimationFrame(animate);
+                    if (document.hidden || (isLowPowerDevice && frameTime - lastFrameTime < 32)) return;
+                    lastFrameTime = frameTime;
+                    frameNumber++;
+                    const posAttr = geometry.attributes.position;
+                    const colorAttr = geometry.attributes.color;
+                    const time = Date.now() * 0.001;
+
+                    bgParticles.rotation.y += 0.0003;
+                    bgParticles.rotation.x += 0.00008;
+                    ringParticles.rotation.y += 0.0006;
+                    ringParticles.rotation.z += 0.0002;
+
+                    if (mouse.active) {
+                        mouseVec.set(mouse.x, mouse.y);
+                        raycaster.setFromCamera(mouseVec, camera);
+                        raycaster.ray.intersectPlane(planeZ, mouseTarget);
+                    }
+
+                    const halfHeight = Math.tan((camera.fov * Math.PI / 180) / 2) * camera.position.z;
+                    const vHeight = container.clientHeight || window.innerHeight;
+                    // Localized touch/cursor radius: ~45px on screen
+                    const repelRadius = Math.max(12, 45 * ((2 * halfHeight) / vHeight));
+                    const repelRadiusSq = repelRadius * repelRadius;
+
+                    for (let i = 0; i < particleCount; i++) {
+                        const i3 = i * 3;
+                        let repelled = false;
+                        if (mouse.active) {
+                            const dx = posAttr.array[i3] - mouseTarget.x;
+                            const dy = posAttr.array[i3 + 1] - mouseTarget.y;
+                            const distSquared = dx * dx + dy * dy;
+                            if (distSquared < repelRadiusSq) {
+                                const dist = Math.sqrt(distSquared);
+                                const force = (repelRadius - dist) / repelRadius;
+                                const pushX = (dist > 0.001 ? dx / dist : (Math.random() - 0.5)) * force * 3.5;
+                                const pushY = (dist > 0.001 ? dy / dist : (Math.random() - 0.5)) * force * 3.5;
+                                posAttr.array[i3] += pushX;
+                                posAttr.array[i3 + 1] += pushY;
+                                posAttr.array[i3 + 2] += (Math.random() - 0.5) * force * 3.0;
+                                repelled = true;
+                            }
+                        }
+                        if (!repelled) {
+                            posAttr.array[i3] += (initialPositions[i3] - posAttr.array[i3]) * 0.08;
+                            posAttr.array[i3 + 1] += (initialPositions[i3 + 1] - posAttr.array[i3 + 1]) * 0.08;
+                            posAttr.array[i3 + 2] += (initialPositions[i3 + 2] - posAttr.array[i3 + 2]) * 0.08;
+                        }
+                        posAttr.array[i3 + 1] += Math.sin(time + i * 0.1) * 0.04;
+
+                        // --- Cool-tone neon color wave ---
+                        // The wave is slow; updating colors every other frame preserves its appearance with less work.
+                        if (frameNumber % 2 !== 0) continue;
+                        const nX = Math.max(0, Math.min(1, (normPoints[i].x + 1) / 2));
+                        // slow horizontal wave + per-particle shimmer
+                        const hueVal = 0.48 + 0.36 * ((nX + time * 0.07 + particlePhases[i] * 0.04) % 1.0);
+                        // brightness: subtle pulse, never goes warm
+                        const bri = 0.52 + 0.16 * Math.sin(time * 0.9 + particlePhases[i]);
+                        // inline HSL→RGB (s=1 so simplified)
+                        const h6 = (((hueVal % 1) + 1) % 1) * 6;
+                        const fh = Math.floor(h6);
+                        const frac = h6 - fh;
+                        const q = bri * (1 - frac);
+                        const t2 = bri * frac;
+                        let rr, gg, bb;
+                        switch (fh) {
+                            case 0: rr = bri; gg = t2; bb = 0; break;
+                            case 1: rr = q; gg = bri; bb = 0; break;
+                            case 2: rr = 0; gg = bri; bb = t2; break;
+                            case 3: rr = 0; gg = q; bb = bri; break;
+                            case 4: rr = t2; gg = 0; bb = bri; break;
+                            default: rr = bri; gg = 0; bb = q; break;
+                        }
+                        colorAttr.array[i3] = rr;
+                        colorAttr.array[i3 + 1] = gg;
+                        colorAttr.array[i3 + 2] = bb;
+                    }
+
+                    if (frameNumber === 10 || frameNumber === 30) {
+                        updateTextDimensions();
+                    }
+
+                    posAttr.needsUpdate = true;
+                    colorAttr.needsUpdate = frameNumber % 2 === 0;
+                    renderer.render(scene, camera);
+                };
+
+                animate();
+
+                window.addEventListener('resize', () => {
+                    const w = container.clientWidth || window.innerWidth;
+                    const h = container.clientHeight || window.innerHeight;
+                    renderer.setSize(w, h);
+                    updateTextDimensions();
+                });
+            })();
+        </script>
+        <!-- Overlays -->
+        <div class="absolute inset-0 z-10 pointer-events-none">
+            <!-- Aurora background glow layer -->
+            <div class="aurora-bg"></div>
+            <!-- Floating orb blobs -->
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+            <div class="orb orb-4"></div>
+            <div class="absolute inset-0 cyber-grid"></div>
+            <!-- Moving scanline bar -->
+            <div class="scanline-bar"></div>
+            <div class="scanline-overlay"></div>
+            <!-- Vignette -->
+            <div class="vignette"></div>
+
+        </div>
+        <!-- Centered Content -->
+        <div
+            class="center-main-group z-20 relative flex flex-col items-center justify-center my-auto pointer-events-none py-1 sm:py-2">
+            <div class="space-y-1.5 sm:space-y-2.5 flex flex-col items-center pointer-events-auto">
+                <!-- Mobile Dedicated 3D Title Slot: positions the glowing Ga kon particles clearly above the avatar -->
+                <div class="mobile-particle-title-slot sm:hidden h-12 w-full flex items-center justify-center pointer-events-auto select-none"
+                    title="Touch to disperse particles"></div>
+
+                <!-- Glowing Avatar Container -->
+                <div class="avatar-container animate-[float_4s_ease-in-out_infinite] mb-0.5">
+                    <img src="avt-optimized.webp" alt="Avatar" class="avatar-image" width="320" height="364"
+                        decoding="async" fetchpriority="high">
+                </div>
+
+                <!-- Identity details -->
+                <div class="text-center w-full space-y-0.5">
+                    <div class="animate-[float_5s_ease-in-out_infinite]">
+                        <div class="hologram-text font-extrabold">GA - KON</div>
+                    </div>
+                    <div class="text-[9px] sm:text-[10px] font-label-md text-on-surface/85 uppercase tracking-[0.18em]">TP. Ho Chi Minh
+                    </div>
+                    <div
+                        class="flex items-center justify-center gap-1 text-[8px] sm:text-[9px] text-accent-cyan/70 font-code-sm uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-[10px] sm:text-[12px] text-accent-cyan">location_on</span>
+                        <span>10.8231° N, 106.6297° E</span>
+                    </div>
+                </div>
+
+                <!-- Glassmorphic Audio Player Widget -->
+                <div class="player-widget flex flex-col select-none relative overflow-hidden">
+                    <!-- Audio player inner bracket indicators -->
+                    <div class="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-accent-cyan/50"></div>
+                    <div class="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-accent-cyan/50"></div>
+                    <div class="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-primary-fixed/50"></div>
+                    <div class="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-primary-fixed/50"></div>
+
+                    <!-- Upper Section: Track Info & Thumbnail -->
+                    <div class="flex items-center gap-2">
+                        <div class="player-art-wrap">
+                            <!-- Rotating vinyl-like disc -->
+                            <img src="cyber-chick-optimized.webp" alt="Track Art" id="player-art" width="26" height="26"
+                                decoding="async"
+                                class="player-art-img paused">
+                            <!-- Status dot that changes based on play state -->
+                            <span class="player-status-dot bg-red-500" id="play-status-dot"></span>
+                        </div>
+                        <div class="flex-1 min-w-0 text-left">
+                            <div class="flex items-center">
+                                <span class="player-user-name truncate">_gakon</span>
+                                <span class="material-symbols-outlined player-verified-icon">verified</span>
+                            </div>
+                            <!-- Song name -->
+                            <p class="player-track-name" id="current-song-title">
+                                LOVE YOURSELF</p>
+                            <p class="player-artist-name" id="current-song-artist">
+                                Justin Bieber</p>
+                        </div>
+                    </div>
+
+                    <!-- Audio element (hidden) -->
+                    <audio id="audio-player" preload="none"></audio>
+
+                    <!-- Control Bar (Back, Play/Pause, Next) -->
+                    <div class="flex items-center justify-center gap-3.5 mt-1 border-t border-white/10 pt-1">
+                        <!-- Back Button -->
+                        <button id="btn-prev" class="player-ctrl-btn" title="Previous Track">
+                            <span class="material-symbols-outlined text-[13px]">skip_previous</span>
+                        </button>
+                        <!-- Play/Pause Button -->
+                        <button id="btn-play-pause" class="player-play-btn" title="Play / Pause">
+                            <span class="material-symbols-outlined text-[12px]" id="play-pause-icon">play_arrow</span>
+                        </button>
+                        <!-- Next Button -->
+                        <button id="btn-next" class="player-ctrl-btn" title="Next Track">
+                            <span class="material-symbols-outlined text-[13px]">skip_next</span>
+                        </button>
+                    </div>
+
+                    <!-- Time Display Labels -->
+                    <div class="flex justify-between player-time-text mt-0.5 px-0.5 select-none">
+                        <span id="player-time-current">0:00</span>
+                        <span id="player-time-total">0:00</span>
+                    </div>
+                    <!-- Touch/Click-Friendly Progress Track -->
+                    <div id="player-progress-track" class="w-full py-1 cursor-pointer select-none">
+                        <div class="player-track-bar-container">
+                            <div class="player-track-bar-fill" id="player-progress-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neon Social Links -->
+                <div class="flex items-center justify-center gap-2.5 sm:gap-3.5 mt-0.5 sm:mt-1">
+                    <a href="https://discord.com/users/882230994499948625" target="_blank" rel="noopener noreferrer"
+                        class="social-btn" title="Discord">
+                        <svg class="fill-current" viewBox="0 0 127.14 96.36">
+                            <path
+                                d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.4-5c.9-.66,1.76-1.37,2.58-2.1a75.52,75.52,0,0,0,72.6,0c.82.73,1.68,1.44,2.58,2.1ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z" />
+                        </svg>
+                    </a>
+                    <a href="https://open.spotify.com/user/31hfwjh4pvtpsiz5wujs6fnkb4ai?si=79c4d27140014c82"
+                        target="_blank" rel="noopener noreferrer" class="social-btn" title="Spotify">
+                        <svg class="fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.49 17.3c-.2.31-.62.41-.93.21-2.54-1.55-5.74-1.9-9.5-1.04-.35.08-.71-.14-.79-.49-.08-.35.14-.71.49-.79 4.11-.94 7.66-.55 10.51 1.19.3.19.4.61.22.93zm1.46-3.26c-.25.4-.77.53-1.17.28-2.9-1.78-7.34-2.29-10.78-1.25-.45.14-.92-.12-1.05-.57-.14-.45.12-.92.57-1.05 4.07-1.23 8.97-.67 12.27 1.36.4.24.52.76.28 1.17 0-.01 0-.01 0 0zm.1-3.4C15.82 8.5 8.82 8.27 4.79 9.5c-.65.2-1.33-.18-1.53-.82-.2-.65.18-1.33.82-1.53 4.62-1.4 12.33-1.14 16.2 1.15.59.35.78 1.11.43 1.7-.35.58-1.11.78-1.7.43z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.facebook.com/gak0nn" target="_blank" rel="noopener noreferrer"
+                        class="social-btn" title="Facebook">
+                        <svg class="fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </a>
+                    <a href="https://steamcommunity.com/profiles/76561199245171581/" target="_blank"
+                        rel="noopener noreferrer" class="social-btn" title="Steam">
+                        <svg class="fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Load the large decorative video only after the critical UI is ready.
+        window.addEventListener('load', () => {
+            const loadBackgroundVideo = () => {
+                const video = document.getElementById('background-video');
+                const sources = video?.querySelectorAll('source[data-src]');
+                if (!video || !sources?.length) return;
+                sources.forEach(source => {
+                    source.src = source.dataset.src;
+                    source.removeAttribute('data-src');
+                });
+                video.load();
+                video.play().catch(() => { });
+            };
+            if ('requestIdleCallback' in window) requestIdleCallback(loadBackgroundVideo, { timeout: 1500 });
+            else setTimeout(loadBackgroundVideo, 0);
+        }, { once: true });
+
+        // Interactive mouse and touch tracking with one DOM update per animation frame.
+        const parallaxGrid = document.querySelector('.cyber-grid');
+        const parallaxOrbs = document.querySelectorAll('.orb');
+        let parallaxX = 0, parallaxY = 0, parallaxPending = false;
+
+        const updateParallax = (clientX, clientY) => {
+            parallaxX = clientX / window.innerWidth - 0.5;
+            parallaxY = clientY / window.innerHeight - 0.5;
+            if (parallaxPending) return;
+            parallaxPending = true;
+            requestAnimationFrame(() => {
+                if (parallaxGrid) parallaxGrid.style.transform = `translate(${parallaxX * 25}px, ${parallaxY * 25}px)`;
+                parallaxOrbs.forEach((orb, index) => {
+                    const factor = (index + 1) * -15;
+                    orb.style.transform = `translate(${parallaxX * factor}px, ${parallaxY * factor}px)`;
+                });
+                parallaxPending = false;
+            });
+        };
+
+        document.addEventListener('mousemove', (e) => {
+            updateParallax(e.clientX, e.clientY);
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                updateParallax(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+        // Interactive Audio Player Logic
+        const audioPlaylist = [
+            { title: "LOVE YOURSELF", artist: "Justin Bieber", url: "music/love_yourself.mp3" },
+            { title: "SORRY", artist: "Justin Bieber", url: "music/sorry.mp3" },
+            { title: "BABY (FEAT. LUDACRIS)", artist: "Justin Bieber", url: "music/baby.mp3" },
+            { title: "DESPACITO (REMIX)", artist: "Luis Fonsi & Daddy Yankee ft. Justin Bieber", url: "music/despacito.mp3" }
+        ];
+
+        let currentTrackIndex = 0;
+        const audioEl = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('btn-play-pause');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const prevBtn = document.getElementById('btn-prev');
+        const nextBtn = document.getElementById('btn-next');
+        const songTitleEl = document.getElementById('current-song-title');
+        const songArtistEl = document.getElementById('current-song-artist');
+        const playerArtEl = document.getElementById('player-art');
+        const progressEl = document.getElementById('player-progress-bar');
+        const statusDotEl = document.getElementById('play-status-dot');
+        const timeCurrentEl = document.getElementById('player-time-current');
+        const timeTotalEl = document.getElementById('player-time-total');
+
+        const formatTime = (secs) => {
+            if (isNaN(secs)) return "0:00";
+            const minutes = Math.floor(secs / 60);
+            const seconds = Math.floor(secs % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        };
+
+        const loadTrack = (index) => {
+            const track = audioPlaylist[index];
+            audioEl.src = track.url;
+            songTitleEl.textContent = track.title;
+            songArtistEl.textContent = track.artist;
+            progressEl.style.width = '0%';
+            timeCurrentEl.textContent = '0:00';
+            timeTotalEl.textContent = '0:00';
+        };
+
+        const playTrack = () => {
+            audioEl.play().then(() => {
+                playPauseIcon.textContent = 'pause';
+                playerArtEl.classList.remove('paused');
+                statusDotEl.classList.remove('bg-red-500');
+                statusDotEl.classList.add('bg-green-500', 'animate-pulse');
+            }).catch(err => {
+                console.log("Audio playback was blocked or failed:", err);
+            });
+        };
+
+        const pauseTrack = () => {
+            audioEl.pause();
+            playPauseIcon.textContent = 'play_arrow';
+            playerArtEl.classList.add('paused');
+            statusDotEl.classList.remove('bg-green-500', 'animate-pulse');
+            statusDotEl.classList.add('bg-red-500');
+        };
+
+        // Event Listeners
+        playPauseBtn.addEventListener('click', () => {
+            if (audioEl.paused) {
+                playTrack();
+            } else {
+                pauseTrack();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex - 1 + audioPlaylist.length) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            playTrack();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            playTrack();
+        });
+
+        audioEl.addEventListener('ended', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            playTrack();
+        });
+
+        audioEl.addEventListener('loadedmetadata', () => {
+            timeTotalEl.textContent = formatTime(audioEl.duration);
+        });
+
+        audioEl.addEventListener('timeupdate', () => {
+            if (audioEl.duration) {
+                const percent = (audioEl.currentTime / audioEl.duration) * 100;
+                progressEl.style.width = `${percent}%`;
+                timeCurrentEl.textContent = formatTime(audioEl.currentTime);
+                timeTotalEl.textContent = formatTime(audioEl.duration);
+            }
+        });
+
+        // Touch & Click Progress Bar Seeking
+        const progressTrack = document.getElementById('player-progress-track');
+        if (progressTrack) {
+            const seekTrack = (e) => {
+                if (!audioEl.duration) return;
+                const rect = progressTrack.getBoundingClientRect();
+                const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+                const clickX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+                audioEl.currentTime = (clickX / rect.width) * audioEl.duration;
+            };
+            progressTrack.addEventListener('click', seekTrack);
+            progressTrack.addEventListener('touchstart', seekTrack, { passive: true });
+        }
+
+        // Initialize first track
+        loadTrack(currentTrackIndex);
+
+
+        // Set initial volume
+        audioEl.volume = 0.7;
+
+        // Entry Gate Decryption Loading Logic
+        (function () {
+            const gate = document.getElementById('entry-gate');
+            const progress = document.getElementById('gate-loading-progress');
+            const prompt = document.getElementById('gate-prompt');
+            const icon = document.getElementById('gate-icon');
+
+            if (!gate || !progress || !prompt) return;
+
+            let percentage = 0;
+            let finished = false;
+
+            const decryptPrompts = [
+                { limit: 25, text: "CONNECTING TO SECURE NODE..." },
+                { limit: 55, text: "DECRYPTING CORE CHANNELS..." },
+                { limit: 85, text: "ESTABLISHING COGNITIVE SYNC..." },
+                { limit: 100, text: "SYNC READY. ACCESS GRANTED." }
+            ];
+
+            const interval = setInterval(() => {
+                percentage += Math.floor(Math.random() * 8) + 4;
+                if (percentage >= 100) {
+                    percentage = 100;
+                    clearInterval(interval);
+                    finished = true;
+                    prompt.textContent = "TAP FINGERPRINT TO ENTER";
+                    prompt.className = "font-code-sm text-[10px] text-accent-cyan tracking-[0.2em] uppercase animate-pulse font-bold mt-1";
+                    if (icon) {
+                        icon.textContent = "lock_open";
+                        icon.className = "material-symbols-outlined text-accent-cyan text-4xl animate-bounce cursor-pointer";
+                    }
+                } else {
+                    const textObj = decryptPrompts.find(p => percentage <= p.limit) || decryptPrompts[decryptPrompts.length - 1];
+                    prompt.textContent = textObj.text;
+                }
+                progress.style.width = `${percentage}%`;
+            }, 70);
+
+            gate.addEventListener('click', () => {
+                if (finished) {
+                    gate.style.opacity = '0';
+                    gate.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        gate.remove();
+                    }, 1000);
+                    playTrack();
+                } else {
+                    // Clicking speeds it up
+                    percentage += 15;
+                    if (percentage > 99) percentage = 99;
+                    progress.style.width = `${percentage}%`;
+                }
+            });
+        })();
+
+        // Custom Cyberpunk Bracket HUD Cursor Logic
+        (function () {
+            if (window.matchMedia('(pointer: fine)').matches) {
+                const dot = document.createElement('div');
+                const hud = document.createElement('div');
+                dot.className = 'custom-cursor-dot';
+                hud.className = 'custom-cursor-hud';
+
+                // Add four corner bracket spans
+                const corners = ['tl', 'tr', 'bl', 'br'];
+                corners.forEach(c => {
+                    const span = document.createElement('span');
+                    span.className = `corner ${c}`;
+                    hud.appendChild(span);
+                });
+
+                document.body.appendChild(dot);
+                document.body.appendChild(hud);
+
+                let mouseX = 0, mouseY = 0;
+                let dotX = 0, dotY = 0;
+                let outlineX = 0, outlineY = 0;
+                let rotationAngle = 0;
+
+                dot.style.opacity = '0';
+                hud.style.opacity = '0';
+
+                window.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+
+                    dot.style.opacity = '1';
+                    hud.style.opacity = '1';
+                });
+
+                const animateCursor = () => {
+                    dotX = mouseX;
+                    dotY = mouseY;
+                    dot.style.left = `${dotX}px`;
+                    dot.style.top = `${dotY}px`;
+
+                    outlineX += (mouseX - outlineX) * 0.15;
+                    outlineY += (mouseY - outlineY) * 0.15;
+                    hud.style.left = `${outlineX}px`;
+                    hud.style.top = `${outlineY}px`;
+
+                    // Kinetic rotation based on movement speed
+                    const dx = mouseX - outlineX;
+                    const dy = mouseY - outlineY;
+                    const speed = Math.sqrt(dx * dx + dy * dy);
+                    const spinSpeed = 0.5 + Math.min(speed * 0.15, 8);
+                    rotationAngle = (rotationAngle + spinSpeed) % 360;
+
+                    hud.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
+
+                    requestAnimationFrame(animateCursor);
+                };
+                requestAnimationFrame(animateCursor);
+
+                window.addEventListener('mousedown', () => {
+                    dot.classList.add('clicked');
+                    hud.classList.add('clicked');
+                });
+
+                window.addEventListener('mouseup', () => {
+                    dot.classList.remove('clicked');
+                    hud.classList.remove('clicked');
+                });
+
+                const updateHoverables = () => {
+                    const hoverables = document.querySelectorAll('a, button, [role="button"], input[type="range"], .cursor-pointer');
+                    hoverables.forEach(el => {
+                        el.removeEventListener('mouseenter', addHoverClass);
+                        el.removeEventListener('mouseleave', removeHoverClass);
+                        el.addEventListener('mouseenter', addHoverClass);
+                        el.addEventListener('mouseleave', removeHoverClass);
+                    });
+                };
+
+                const addHoverClass = () => {
+                    dot.classList.add('hovered');
+                    hud.classList.add('hovered');
+                };
+
+                const removeHoverClass = () => {
+                    dot.classList.remove('hovered');
+                    hud.classList.remove('hovered');
+                };
+
+                updateHoverables();
+
+
+                document.addEventListener('mouseleave', () => {
+                    dot.style.opacity = '0';
+                    hud.style.opacity = '0';
+                });
+                document.addEventListener('mouseenter', () => {
+                    dot.style.opacity = '1';
+                    hud.style.opacity = '1';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

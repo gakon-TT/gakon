@@ -1,0 +1,41 @@
+{
+  "developer": {
+    "name": "Tai Tran",
+    "nickname": "Gakon",
+    "nationality": "Vietnamese",
+    "location": "Ho Chi Minh City, Vietnam",
+    "status": "Exploring New Technologies & Open to Collaboration"
+  },
+  "expertise": {
+    "frontend_architecture": {
+      "specialization": "React, Next.js, Cyberpunk UI & Web Systems"
+    },
+    "infrastructure": {
+      "role": "System Administration & Server Operations",
+      "experience": "2+ Years"
+    },
+    "interactive_creation": {
+      "service": "FiveM Dev, Digital Creator & Bot Architect"
+    }
+  },
+  "websites": {
+    "operating_system": {
+      "url": "http://gakon.dev",
+      "description": "Ga kon OS - macOS / Cyberpunk Desktop environment in the browser."
+    }
+  },
+  "portfolio": {
+    "url": "http://gakon.dev",
+    "description": "A personal web profile displaying my professional projects, system architectures, and technical expertise."
+  },
+  "socials": {
+    "discord": "https://discord.com/users/882230994499948625",
+    "spotify": "https://open.spotify.com/user/31hfwjh4pvtpsiz5wujs6fnkb4ai?si=79c4d27140014c82",
+    "facebook": "https://www.facebook.com/gak0nn",
+    "steam": "https://steamcommunity.com/profiles/76561199245171581/"
+  },
+  "contact": {
+    "message": "Open to networking, professional collaboration, or technical discussions. Feel free to connect via the links provided.",
+    "website": "http://gakon.dev"
+  }
+}

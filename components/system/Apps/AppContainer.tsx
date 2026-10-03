@@ -1,0 +1,70 @@
+import { memo, useMemo, useRef, useState } from "react";
+import styled, { type IStyledComponent } from "styled-components";
+import { type FastOmit } from "styled-components/dist/types";
+import StyledLoading from "components/system/Apps/StyledLoading";
+import useFileDrop from "components/system/Files/FileManager/useFileDrop";
+import { useProcess } from "contexts/process";
+
+export type ContainerHookProps = {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  id: string;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  url: string;
+};
+
+type ContainerHook = (props: ContainerHookProps) => void;
+
+type AppContainerProps = {
+  id: string;
+  StyledComponent?: IStyledComponent<
+    "web",
+    FastOmit<
+      React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLDivElement>,
+        HTMLDivElement
+      >,
+      never
+    >
+  >;
+  useHook: ContainerHook;
+};
+
+const StyledAppContainer = styled.div``;
+
+const AppContainer: FC<AppContainerProps> = ({
+  children,
+  id,
+  StyledComponent,
+  useHook,
+}): React.JSX.Element => {
+  const { url = "" } = useProcess(id);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState(true);
+  const style = useMemo<React.CSSProperties>(
+    () => ({
+      contain: "strict",
+      visibility: loading ? "hidden" : "visible",
+    }),
+    [loading]
+  );
+  const StyledWrapper = StyledComponent || StyledAppContainer;
+
+  useHook({ containerRef, id, loading, setLoading, url });
+
+  return (
+    <>
+      {loading && <StyledLoading />}
+      <StyledWrapper
+        ref={containerRef}
+        aria-busy={loading || undefined}
+        style={style}
+        {...useFileDrop({ id })}
+      >
+        {children}
+      </StyledWrapper>
+    </>
+  );
+};
+
+export default memo(AppContainer);
