@@ -20,7 +20,7 @@ export const DEFAULT_ASCENDING = true;
 
 export const DEFAULT_CLOCK_SOURCE: ClockSource = "local";
 
-export const DEFAULT_CLOSE_EFFECT = "None";
+export const DEFAULT_CLOSE_EFFECT = "Random";
 
 export const DEFAULT_THEME: ThemeName = "defaultTheme";
 
