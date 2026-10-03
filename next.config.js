@@ -41,6 +41,9 @@ const nextConfig = {
     "prettier",
   ],
   webpack: (config) => {
+    config.output = config.output || {};
+    config.output.hashFunction = "xxhash64";
+
     config.plugins.push(
       new webpack.NormalModuleReplacementPlugin(/node:/, (resource) => {
         const mod = resource.request.replace(/^node:/, "");
