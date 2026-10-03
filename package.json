@@ -2,6 +2,7 @@
   "name": "daedalos",
   "version": "2.0.0",
   "description": "Ga kon OS - Desktop environment in the browser",
+  "packageManager": "yarn@1.22.22",
   "author": {
     "name": "Ga kon",
     "email": "gakon@g4kon.gg",
