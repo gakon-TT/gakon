@@ -1225,7 +1225,7 @@ const Gakon: FC<ComponentProcessProps> = () => {
   const [isRepeat, setIsRepeat] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [visitCount, setVisitCount] = useState<number>(382);
+  const [visitCount, setVisitCount] = useState<number>(300);
   const [volume, setVolume] = useState<number>(85);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
@@ -1806,16 +1806,29 @@ const Gakon: FC<ComponentProcessProps> = () => {
     return () => clearInterval(interval);
   }, [isPlaying, durationSec]);
 
-  // Persistent Visit Counter Increment
+  // Persistent Visit Counter — increments only once per browser session (page load),
+  // not every time the app window is opened/closed within daedalOS.
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("gakon_visit_count");
-      const baseCount = stored ? parseInt(stored, 10) : 382;
-      const nextCount = isNaN(baseCount) ? 383 : baseCount + 1;
-      localStorage.setItem("gakon_visit_count", nextCount.toString());
-      setVisitCount(nextCount);
+      const SESSION_KEY = "gakon_visit_session_v2";
+      const STORAGE_KEY = "gakon_visit_count_v2";
+      const alreadyCounted = sessionStorage.getItem(SESSION_KEY);
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const currentCount = stored ? parseInt(stored, 10) : 300;
+      const safeCount = isNaN(currentCount) ? 300 : currentCount;
+
+      if (!alreadyCounted) {
+        // First time this browser session — increment and mark as counted
+        const nextCount = safeCount + 1;
+        localStorage.setItem(STORAGE_KEY, nextCount.toString());
+        sessionStorage.setItem(SESSION_KEY, "1");
+        setVisitCount(nextCount);
+      } else {
+        // Already counted this session — just display the stored value
+        setVisitCount(safeCount);
+      }
     } catch {
-      setVisitCount(383);
+      setVisitCount(300);
     }
   }, []);
 
