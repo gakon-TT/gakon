@@ -298,7 +298,8 @@ const useSessionContextState = (): {
           }
 
           if (session.clockSource) setClockSource(session.clockSource);
-          if (session.closeEffect) setCloseEffect(session.closeEffect);
+          if (session.closeEffect && session.closeEffect !== "None")
+            setCloseEffect(session.closeEffect);
           if (session.cursor) setCursor(session.cursor);
           if (session.aiEnabled) setAiEnabled(session.aiEnabled);
           if (session.themeName) setThemeName(session.themeName);
