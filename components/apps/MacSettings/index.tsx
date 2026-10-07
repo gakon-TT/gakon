@@ -424,6 +424,21 @@ const MacSettings: FC<ComponentProcessProps> = () => {
                   videoSrc: "/Users/Public/Videos/nen4.mp4",
                 },
                 {
+                  id: "/Users/Public/Videos/nen5.mp4",
+                  name: "Video Nền 5",
+                  videoSrc: "/Users/Public/Videos/nen5.mp4",
+                },
+                {
+                  id: "/Users/Public/Videos/nen6.mp4",
+                  name: "Video Nền 6",
+                  videoSrc: "/Users/Public/Videos/nen6.mp4",
+                },
+                {
+                  id: "/Users/Public/Videos/nen7.mp4",
+                  name: "Video Nền 7",
+                  videoSrc: "/Users/Public/Videos/nen7.mp4",
+                },
+                {
                   id: "GALAXY",
                   name: "Thiên hà (Galaxy 3D)",
                   style: "linear-gradient(135deg, #09090e, #1a1a3a)",

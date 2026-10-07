@@ -92,6 +92,21 @@ export const WALLPAPER_MENU: WallpaperMenuItem[] = [
     name: "Video Nền 4",
   },
   {
+    hasAlt: false,
+    id: "/Users/Public/Videos/nen5.mp4",
+    name: "Video Nền 5",
+  },
+  {
+    hasAlt: false,
+    id: "/Users/Public/Videos/nen6.mp4",
+    name: "Video Nền 6",
+  },
+  {
+    hasAlt: false,
+    id: "/Users/Public/Videos/nen7.mp4",
+    name: "Video Nền 7",
+  },
+  {
     id: "ART_INSTITUTE_OF_CHICAGO",
     name: "Art Institute of Chicago",
   },
