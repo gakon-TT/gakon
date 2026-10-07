@@ -39,7 +39,15 @@ const useDraggable = (id: string, size: Size): Draggable => {
     if (id === "Gakon" && typeof window !== "undefined") {
       const vh = window.innerHeight;
       const vw = window.innerWidth;
+      const isMobile = vw <= 768;
       const isLaptop = vh < 820 || vw < 1500;
+      if (isMobile) {
+        const curWidth = pxToNum(size.width);
+        return {
+          x: Math.max(4, Math.round((vw - curWidth) / 2)),
+          y: 34,
+        };
+      }
       if (isLaptop) {
         const curWidth = pxToNum(size.width);
         return {
@@ -112,7 +120,15 @@ const useDraggable = (id: string, size: Size): Draggable => {
       if (typeof window !== "undefined") {
         const vh = window.innerHeight;
         const vw = window.innerWidth;
+        const isMobile = vw <= 768;
         const isLaptop = vh < 820 || vw < 1500;
+        if (isMobile) {
+          const curWidth = pxToNum(size.width);
+          const x = Math.max(4, Math.round((vw - curWidth) / 2));
+          const y = 34;
+          setPosition({ x, y });
+          return;
+        }
         if (isLaptop) {
           const curWidth = pxToNum(size.width);
           const x = Math.max(20, Math.min(vw - curWidth - 25, Math.round(vw * 0.54)));
@@ -138,8 +154,14 @@ const useDraggable = (id: string, size: Size): Draggable => {
       if (blockAutoPositionRef.current) return;
       const vh = window.innerHeight;
       const vw = window.innerWidth;
+      const isMobile = vw <= 768;
       const isLaptop = vh < 820 || vw < 1500;
-      if (isLaptop) {
+      if (isMobile) {
+        const curWidth = pxToNum(sizeRef.current.width);
+        const x = Math.max(4, Math.round((vw - curWidth) / 2));
+        const y = 34;
+        setPosition({ x, y });
+      } else if (isLaptop) {
         const curWidth = pxToNum(sizeRef.current.width);
         const x = Math.max(20, Math.min(vw - curWidth - 25, Math.round(vw * 0.54)));
         const y = 34;

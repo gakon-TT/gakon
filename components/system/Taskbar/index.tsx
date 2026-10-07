@@ -13,7 +13,7 @@ import PinnedDockApps from "components/system/Taskbar/PinnedDockApps";
 import SearchButton from "components/system/Taskbar/Search/SearchButton";
 
 import StartButton from "components/system/Taskbar/StartButton";
-import StyledTaskbar from "components/system/Taskbar/StyledTaskbar";
+import StyledTaskbar, { IPadHomeBar } from "components/system/Taskbar/StyledTaskbar";
 import StyledTaskbarButton from "components/system/Taskbar/StyledTaskbarButton";
 import TaskbarEntries from "components/system/Taskbar/TaskbarEntries";
 
@@ -90,6 +90,7 @@ const Taskbar: FC = () => {
         <TaskbarEntries clockWidth={clockWidth} hasAI={hasAI} />
         {hasAI && <AIButton aiVisible={aiVisible} toggleAI={toggleAI} />}
       </StyledTaskbar>
+      <IPadHomeBar />
       <AnimatePresence initial={false} presenceAffectsLayout={false}>
         {calendarVisible && (
           <Calendar key="calendar" toggleCalendar={toggleCalendar} />

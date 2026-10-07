@@ -138,6 +138,37 @@ export const StyledTopBar = styled.header`
       background: rgba(255, 255, 255, 0.15);
     }
   }
+
+  @media (max-width: 768px) {
+    padding: 0 6px;
+    font-size: 12px;
+
+    .menu-item {
+      display: none;
+    }
+
+    .apple-logo-btn {
+      padding: 0 4px;
+    }
+
+    .app-name {
+      font-size: 12px;
+      padding: 0 4px;
+    }
+
+    .status-icon-btn {
+      padding: 0 3px;
+      font-size: 11px;
+      span {
+        display: none;
+      }
+    }
+
+    .clock-btn {
+      padding: 0 4px;
+      font-size: 11px;
+    }
+  }
 `;
 
 export const StyledAppleMenu = styled.div<{ $left?: string; $right?: string }>`
@@ -159,6 +190,11 @@ export const StyledAppleMenu = styled.div<{ $left?: string; $right?: string }>`
   position: fixed;
   top: 32px;
   z-index: 100002;
+
+  @media (max-width: 768px) {
+    max-width: calc(100vw - 16px);
+    font-size: 12px;
+  }
 
   .menu-entry {
     align-items: center;

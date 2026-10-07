@@ -112,50 +112,46 @@ const useUrlLoader = (): void => {
       } else {
         loadInitialApp("Gakon");
 
-        terminalTimerRef.current = setTimeout(() => {
-          const vw = typeof window === "undefined" ? 1440 : window.innerWidth;
-          const vh = typeof window === "undefined" ? 900 : window.innerHeight;
-          const isLaptop = vh < 820 || vw < 1500;
-          const termWidth = isLaptop
-            ? Math.max(360, Math.min(620, Math.round(vw * 0.48)))
-            : Math.min(720, Math.round(vw * 0.48));
-          const maxTermHeight = Math.max(360, vh - 115);
-          const termHeight = isLaptop
-            ? Math.min(460, maxTermHeight)
-            : Math.min(520, maxTermHeight);
-          const termX = isLaptop ? 25 : 40;
-          const termY = 40;
+        const scheduleTerminal = (): void => {
+          terminalTimerRef.current = setTimeout(() => {
+            const vw = typeof window === "undefined" ? 1440 : window.innerWidth;
+            const vh = typeof window === "undefined" ? 900 : window.innerHeight;
+            const isLaptop = vh < 820 || vw < 1500;
+            const termWidth = isLaptop
+              ? Math.max(360, Math.min(620, Math.round(vw * 0.48)))
+              : Math.min(720, Math.round(vw * 0.48));
+            const maxTermHeight = Math.max(360, vh - 115);
+            const termHeight = isLaptop
+              ? Math.min(460, maxTermHeight)
+              : Math.min(520, maxTermHeight);
+            const termX = isLaptop ? 25 : 40;
+            const termY = 40;
 
-          setWindowStates((prev) => ({
-            ...prev,
-            Terminal: {
-              ...prev?.Terminal,
-              position: { x: termX, y: termY },
-              size: { height: termHeight, width: termWidth },
-            },
-          }));
+            setWindowStates((prev) => ({
+              ...prev,
+              Terminal: {
+                ...prev?.Terminal,
+                position: { x: termX, y: termY },
+                size: { height: termHeight, width: termWidth },
+              },
+            }));
 
-          open("Terminal");
-        }, 3000);
+            open("Terminal");
+          }, 3000);
+        };
+
+        if (
+          typeof window !== "undefined" &&
+          (window as unknown as { __daedalOS_unlocked?: boolean }).__daedalOS_unlocked
+        ) {
+          scheduleTerminal();
+        } else {
+          window.addEventListener("daedalOS:unlock", scheduleTerminal, { once: true });
+        }
       }
     };
 
-    if (
-      typeof window !== "undefined" &&
-      (window as unknown as { __daedalOS_unlocked?: boolean }).__daedalOS_unlocked
-    ) {
-      startInitialApps();
-      return;
-    }
-
-    const onUnlock = (): void => {
-      startInitialApps();
-    };
-
-    window.addEventListener("daedalOS:unlock", onUnlock, { once: true });
-    return () => {
-      window.removeEventListener("daedalOS:unlock", onUnlock);
-    };
+    startInitialApps();
   }, [exists, fs, open, setWindowStates, stat]);
 };
 

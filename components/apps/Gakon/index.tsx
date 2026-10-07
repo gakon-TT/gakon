@@ -37,6 +37,55 @@ const radarPing = keyframes`
   100% { transform: scale(2.4); opacity: 0; }
 `;
 
+const eyePulse = keyframes`
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.25); opacity: 1; filter: drop-shadow(0 0 6px #00f5d4); }
+  100% { transform: scale(1); opacity: 0.9; }
+`;
+
+const CyberEyeIcon: FC = memo(() => (
+  <svg
+    className="cyber-eye-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M2.062 12C3.457 7.746 7.37 4.75 12 4.75C16.63 4.75 20.543 7.746 21.938 12C20.543 16.254 16.63 19.25 12 19.25C7.37 19.25 3.457 16.254 2.062 12Z"
+      stroke="url(#eyeGrad)"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="4"
+      stroke="url(#irisGrad)"
+      strokeWidth="1.6"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="1.8"
+      fill="#00f5d4"
+      className="pupil-pulse"
+    />
+    <circle cx="13.2" cy="10.8" r="0.7" fill="#ffffff" opacity="0.9" />
+    <defs>
+      <linearGradient id="eyeGrad" x1="2" y1="5" x2="22" y2="19" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#38bdf8" />
+        <stop offset="0.5" stopColor="#ec4899" />
+        <stop offset="1" stopColor="#00f5d4" />
+      </linearGradient>
+      <linearGradient id="irisGrad" x1="8" y1="8" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#f472b6" />
+        <stop offset="1" stopColor="#38bdf8" />
+      </linearGradient>
+    </defs>
+  </svg>
+));
+
 const Container = styled.div`
   background: radial-gradient(circle at 50% 10%, #15082a 0%, #070310 50%, #020106 100%);
   color: #f5f5f7;
@@ -818,42 +867,56 @@ const Container = styled.div`
     /* Compact Visits Footer Badge */
     .compact-visits-badge {
       align-items: center;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(20, 20, 32, 0.65);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(244, 114, 182, 0.25);
       border-radius: 20px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px rgba(244, 114, 182, 0.15);
       cursor: pointer;
       display: flex;
-      font-size: 11.5px;
-      font-weight: 600;
-      gap: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      gap: 6px;
       justify-content: center;
       margin: 12px auto 0;
-      padding: 6px 16px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 5px 14px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       width: fit-content;
 
       @media (max-height: 820px), (max-width: 1440px) {
-        margin: 2px auto 0;
-        padding: 2px 8px;
-        font-size: 9px;
+        margin: 4px auto 0;
+        padding: 3px 10px;
+        font-size: 10.5px;
       }
 
       &:hover {
-        background: rgba(244, 114, 182, 0.15);
-        border-color: rgba(244, 114, 182, 0.4);
-        box-shadow: 0 0 16px rgba(244, 114, 182, 0.3);
-        transform: translateY(-2px);
+        background: rgba(244, 114, 182, 0.2);
+        border-color: rgba(244, 114, 182, 0.6);
+        box-shadow: 0 0 20px rgba(244, 114, 182, 0.4), 0 0 10px rgba(0, 245, 212, 0.4);
+        transform: translateY(-2px) scale(1.04);
+
+        .cyber-eye-icon {
+          transform: scale(1.15) rotate(5deg);
+        }
       }
 
-      .visits-icon {
-        font-size: 13px;
+      .cyber-eye-icon {
+        height: 16px;
+        width: 16px;
+        filter: drop-shadow(0 0 6px rgba(0, 245, 212, 0.6));
+        transition: transform 0.2s ease;
+
+        .pupil-pulse {
+          animation: ${eyePulse} 2s ease-in-out infinite alternate;
+        }
       }
 
       .visits-text {
-        color: #f472b6;
-        letter-spacing: 0.3px;
+        background: linear-gradient(135deg, #f472b6 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+        letter-spacing: 0.5px;
       }
     }
 
@@ -1607,6 +1670,77 @@ const Gakon: FC<ComponentProcessProps> = () => {
     }
   }, [currentTrack, isPlaying, loadAndPlaySong, stopSynth]);
 
+  // Broadcast current music state to LockScreen and listen for LockScreen player commands
+  useEffect(() => {
+    const musicState = {
+      artist: currentTrack.artist,
+      cover: "/System/GakonWeb/lockscreen-avatar.jpg",
+      isPlaying,
+      title: currentTrack.title,
+    };
+    (window as unknown as { __gakonMusicState?: typeof musicState }).__gakonMusicState = musicState;
+    window.dispatchEvent(new CustomEvent("daedalOS:musicState", { detail: musicState }));
+  }, [currentTrack, isPlaying]);
+
+  useEffect(() => {
+    const handleCommand = (e: Event) => {
+      const customEvt = e as CustomEvent<{ action: string }>;
+      const action = customEvt.detail?.action;
+      if (action === "next") {
+        handleNextTrack();
+      } else if (action === "prev") {
+        handlePrevTrack();
+      } else if (action === "toggle") {
+        togglePlay();
+      } else if (action === "play" || action === "unmute") {
+        hasUserPausedRef.current = false;
+        setIsPlaying(true);
+        if (ytPlayerRef.current && isYtReadyRef.current) {
+          try {
+            if (!isMutedRef.current && volumeRef.current > 0) {
+              ytPlayerRef.current.unMute();
+              ytPlayerRef.current.setVolume(volumeRef.current);
+            }
+            ytPlayerRef.current.playVideo();
+          } catch {}
+        }
+      }
+    };
+
+    window.addEventListener("daedalOS:musicCommand", handleCommand);
+    return () => window.removeEventListener("daedalOS:musicCommand", handleCommand);
+  }, [handleNextTrack, handlePrevTrack, togglePlay]);
+
+  // Global browser audio unlock listener (on initial user touch/click/gesture anywhere)
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (ytPlayerRef.current && isYtReadyRef.current && !hasUserPausedRef.current) {
+        try {
+          if (!isMutedRef.current && volumeRef.current > 0) {
+            ytPlayerRef.current.unMute();
+            ytPlayerRef.current.setVolume(volumeRef.current);
+          }
+          ytPlayerRef.current.playVideo();
+        } catch {}
+      }
+    };
+
+    const gestureEvents = ["pointerdown", "touchstart", "click", "keydown", "mousemove"];
+    const handleGesture = () => {
+      unlockAudio();
+    };
+
+    gestureEvents.forEach((evt) =>
+      window.addEventListener(evt, handleGesture, { capture: true, passive: true })
+    );
+
+    return () => {
+      gestureEvents.forEach((evt) =>
+        window.removeEventListener(evt, handleGesture, { capture: true })
+      );
+    };
+  }, []);
+
   // YouTube Iframe API initialization
   useEffect(() => {
     let pollInterval: NodeJS.Timeout | null = null;
@@ -1634,14 +1768,6 @@ const Gakon: FC<ComponentProcessProps> = () => {
           events: {
             onReady: (event: any) => {
               isYtReadyRef.current = true;
-              try {
-                if (isMutedRef.current || volumeRef.current === 0) {
-                  event.target.mute();
-                } else {
-                  event.target.unMute();
-                  event.target.setVolume(volumeRef.current);
-                }
-              } catch {}
 
               if (pendingPlayRef.current) {
                 const song = pendingPlayRef.current;
@@ -1658,8 +1784,20 @@ const Gakon: FC<ComponentProcessProps> = () => {
                     event.target.unMute();
                     event.target.setVolume(volumeRef.current);
                   }
-                  event.target.playVideo();
-                } catch {}
+                  const res = event.target.playVideo();
+                  if (res && typeof res.catch === "function") {
+                    res.catch(() => {
+                      // If browser blocks unmuted autoplay, play muted first so video plays instantly on load
+                      event.target.mute();
+                      event.target.playVideo();
+                    });
+                  }
+                } catch {
+                  try {
+                    event.target.mute();
+                    event.target.playVideo();
+                  } catch {}
+                }
               }
             },
             onStateChange: (event: any) => {
@@ -1806,30 +1944,89 @@ const Gakon: FC<ComponentProcessProps> = () => {
     return () => clearInterval(interval);
   }, [isPlaying, durationSec]);
 
-  // Persistent Visit Counter — increments only once per browser session (page load),
-  // not every time the app window is opened/closed within daedalOS.
+  // Persistent Synchronized Visit Counter across devices (Mobile & PC)
   useEffect(() => {
-    try {
-      const SESSION_KEY = "gakon_visit_session_v2";
-      const STORAGE_KEY = "gakon_visit_count_v2";
-      const alreadyCounted = sessionStorage.getItem(SESSION_KEY);
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const currentCount = stored ? parseInt(stored, 10) : 300;
-      const safeCount = isNaN(currentCount) ? 300 : currentCount;
+    const STORAGE_KEY = "gakon_visit_count_v3";
+    const SESSION_KEY = "gakon_visit_session_v3";
 
-      if (!alreadyCounted) {
-        // First time this browser session — increment and mark as counted
-        const nextCount = safeCount + 1;
-        localStorage.setItem(STORAGE_KEY, nextCount.toString());
-        sessionStorage.setItem(SESSION_KEY, "1");
-        setVisitCount(nextCount);
-      } else {
-        // Already counted this session — just display the stored value
-        setVisitCount(safeCount);
+    let cached = 304;
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        if (!isNaN(parsed) && parsed > 0) cached = parsed;
       }
     } catch {
-      setVisitCount(300);
+      cached = 304;
     }
+    setVisitCount(cached);
+
+    const syncVisitCount = async () => {
+      try {
+        const isNewSession = typeof sessionStorage !== "undefined" && !sessionStorage.getItem(SESSION_KEY);
+        const primaryUrl = isNewSession
+          ? "https://countapi.mileshilliard.com/api/v1/hit/gakon_gos_official_v1"
+          : "https://countapi.mileshilliard.com/api/v1/get/gakon_gos_official_v1";
+
+        const secondaryUrl = isNewSession
+          ? "https://abacus.jasoncameron.dev/hit/gakon_gos_official_v1/visits"
+          : "https://abacus.jasoncameron.dev/get/gakon_gos_official_v1/visits";
+
+        let apiVal: number | null = null;
+
+        try {
+          const res = await fetch(primaryUrl, { cache: "no-store" });
+          if (res.ok) {
+            const data = await res.json();
+            if (typeof data?.value === "number") {
+              apiVal = data.value;
+            }
+          }
+        } catch {
+          // try secondary
+        }
+
+        if (apiVal === null) {
+          try {
+            const res = await fetch(secondaryUrl, { cache: "no-store" });
+            if (res.ok) {
+              const data = await res.json();
+              if (typeof data?.value === "number") {
+                apiVal = data.value;
+              }
+            }
+          } catch {
+            // ignore
+          }
+        }
+
+        if (apiVal !== null) {
+          const syncedTotal = 304 + apiVal;
+          setVisitCount(syncedTotal);
+          try {
+            localStorage.setItem(STORAGE_KEY, syncedTotal.toString());
+            if (isNewSession) {
+              sessionStorage.setItem(SESSION_KEY, "1");
+            }
+          } catch {
+            // ignore
+          }
+        } else if (isNewSession) {
+          const fallbackNext = cached + 1;
+          setVisitCount(fallbackNext);
+          try {
+            localStorage.setItem(STORAGE_KEY, fallbackNext.toString());
+            sessionStorage.setItem(SESSION_KEY, "1");
+          } catch {
+            // ignore
+          }
+        }
+      } catch {
+        // silent fallback
+      }
+    };
+
+    syncVisitCount();
   }, []);
 
   // 3D Parallax Tracking
@@ -2330,11 +2527,11 @@ const Gakon: FC<ComponentProcessProps> = () => {
           {/* Compact Visits Footer Badge */}
           <div
             className="compact-visits-badge"
-            onClick={() => showToast(`👁️ Hồ sơ đạt ${visitCount}+ lượt xem!`)}
+            onClick={() => showToast(`✨ Hồ sơ đạt ${visitCount}+ lượt xem!`)}
             title="Lượt truy cập hồ sơ"
           >
-            <span className="visits-icon">👁️</span>
-            <span className="visits-text">{visitCount}+ Visits</span>
+            <CyberEyeIcon />
+            <span className="visits-text">{visitCount}+</span>
           </div>
         </div>
       </div>

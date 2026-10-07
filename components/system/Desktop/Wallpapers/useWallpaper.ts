@@ -340,6 +340,17 @@ const useWallpaper = (
     let newWallpaperFit = wallpaperFit;
     const isSlideshow = wallpaperName === "SLIDESHOW";
 
+    let targetWallpaperPath = wallpaperImage;
+    if (
+      wallpaperImage === "/Users/Public/Videos/nen.mp4" ||
+      wallpaperImage === "/Users/Public/Videos/nen7.mp4"
+    ) {
+      const isMobileView = typeof window !== "undefined" && window.innerWidth <= 768;
+      targetWallpaperPath = isMobileView
+        ? "/Users/Public/Videos/nen7.mp4"
+        : "/Users/Public/Videos/nen.mp4";
+    }
+
     if (isSlideshow) {
       resetWallpaper();
 
@@ -413,13 +424,13 @@ const useWallpaper = (
           newWallpaper.updateTimeout
         );
       }
-    } else if (await exists(wallpaperImage)) {
+    } else if (await exists(targetWallpaperPath)) {
       resetWallpaper();
 
-      const imgExt = getExtension(wallpaperImage);
+      const imgExt = getExtension(targetWallpaperPath);
       const isNative = NATIVE_IMAGE_FORMATS.has(imgExt);
       const [initialData, decoder] = await Promise.all([
-        readFile(wallpaperImage),
+        readFile(targetWallpaperPath),
         isNative
           ? Promise.resolve()
           : import("utils/imageDecoder").then((m) => m.decodeImageToBuffer),
@@ -434,13 +445,14 @@ const useWallpaper = (
 
       wallpaperUrl = bufferToUrl(
         fileData,
-        isNative ? undefined : getMimeType(wallpaperImage)
+        isNative ? undefined : getMimeType(targetWallpaperPath)
       );
     }
 
     if (wallpaperUrl) {
-      if (VIDEO_FILE_EXTENSIONS.has(getExtension(wallpaperImage))) {
+      if (VIDEO_FILE_EXTENSIONS.has(getExtension(targetWallpaperPath))) {
         const video = document.createElement("video");
+        const isMobileView = typeof window !== "undefined" && window.innerWidth <= 768;
 
         video.src = wallpaperUrl;
 
@@ -463,6 +475,7 @@ const useWallpaper = (
         video.style.willChange = "transform";
 
         video.setAttribute("aria-hidden", "true");
+        video.setAttribute("data-wallpaper-mode", isMobileView ? "mobile" : "desktop");
 
         desktopRef.current?.append(video);
         video.play().catch(() => {});
@@ -599,6 +612,20 @@ const useWallpaper = (
 
   useEffect(() => {
     const resizeListener = (): void => {
+      if (
+        wallpaperImage === "/Users/Public/Videos/nen.mp4" ||
+        wallpaperImage === "/Users/Public/Videos/nen7.mp4"
+      ) {
+        const isMobile = window.innerWidth <= 768;
+        const currentVideo = desktopRef.current?.querySelector(BASE_VIDEO_SELECTOR);
+        if (currentVideo instanceof HTMLVideoElement) {
+          const isCurrentMobileVideo = currentVideo.getAttribute("data-wallpaper-mode") === "mobile";
+          if (isMobile !== isCurrentMobileVideo) {
+            loadFileWallpaper().catch(loadWallpaper);
+          }
+        }
+      }
+
       if (!desktopRef.current || !WALLPAPER_PATHS[wallpaperName]) return;
 
       const desktopRect = desktopRef.current.getBoundingClientRect();
@@ -617,7 +644,7 @@ const useWallpaper = (
     window.addEventListener("resize", resizeListener, { passive: true });
 
     return () => window.removeEventListener("resize", resizeListener);
-  }, [desktopRef, wallpaperName, wallpaperWorker]);
+  }, [desktopRef, loadFileWallpaper, loadWallpaper, wallpaperImage, wallpaperName, wallpaperWorker]);
 };
 
 export default useWallpaper;

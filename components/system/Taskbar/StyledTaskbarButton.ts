@@ -34,6 +34,17 @@ const StyledTaskbarButton = styled(Button)<StyledTaskbarButtonProps>`
   &:active {
     transform: scale(0.96);
   }
+
+  @media (max-width: 768px) {
+    height: 38px;
+    min-width: 38px;
+    width: 38px;
+
+    svg {
+      height: 32px;
+      width: 32px;
+    }
+  }
 `;
 
 export default StyledTaskbarButton;

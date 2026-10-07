@@ -14,7 +14,14 @@ const useDefaultSize = (id: string): Size => {
     if (id === "Gakon" && typeof window !== "undefined") {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const isMobile = vw <= 768;
       const isLaptop = vh < 820 || vw < 1500;
+      if (isMobile) {
+        return {
+          height: Math.min(vh - 95, 680),
+          width: Math.min(vw - 16, 430),
+        };
+      }
       if (isLaptop) {
         const maxAllowedHeight = vh - 105;
         return {

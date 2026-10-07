@@ -31,6 +31,14 @@ const StyledWindow = styled(motion.section)<StyledWindowProps>`
     backdrop-filter: ${({ $backgroundBlur }) =>
       $backgroundBlur ? `blur(${$backgroundBlur})` : undefined};
   }
+
+  @media (max-width: 768px) {
+    border-radius: 20px;
+    box-shadow: ${({ $isForeground }) =>
+      $isForeground
+        ? "0 28px 70px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.22)"
+        : "0 14px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1)"};
+  }
 `;
 
 export default StyledWindow;
