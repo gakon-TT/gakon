@@ -35,7 +35,7 @@ export const JSON_PROFILE_LINES = [
   '    \u001B[36m"url"\u001B[0m: \u001B[32m"https://music.gakon.dev/"\u001B[0m,',
   '    \u001B[36m"description"\u001B[0m: \u001B[32m"\u00A9 2026 GAKON MUSIC \u2022 N\u1EC1n t\u1EA3ng nghe nh\u1EA1c b\u1EA1n y\u00EAu th\u00EDch mi\u1EC5n ph\u00ED."\u001B[0m,',
   '    \u001B[36m"stack"\u001B[0m: \u001B[32m"React, TypeScript, Node.js, PostgreSQL"\u001B[0m,',
-  '    \u001B[36m"features"\u001B[0m: \u001B[33m["Hi-Res Audio Streaming", "Offline Mode", "AI Radio", "Social Listening"]\u001B[0m,',
+  '    \u001B[36m"features"\u001B[0m: \u001B[33m["Hi-Res Audio Streaming", "Offline Mode", "Social Listening"]\u001B[0m,',
   '    \u001B[36m"status"\u001B[0m: \u001B[32m"Live & Active"\u001B[0m,',
   '    \u001B[36m"users"\u001B[0m: \u001B[32m"Growing Community"\u001B[0m',
   "  },",

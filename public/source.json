@@ -13,11 +13,7 @@
     "url": "https://music.gakon.dev/",
     "description": "© 2026 GAKON MUSIC • Nền tảng nghe nhạc bạn yêu thích miễn phí.",
     "stack": "React, TypeScript, Node.js, PostgreSQL",
-    "features": [
-      "Hi-Res Audio Streaming",
-      "Offline Mode",
-      "Social Listening"
-    ],
+    "features": ["Hi-Res Audio Streaming", "Offline Mode", "Social Listening"],
     "status": "Live & Active",
     "users": "Growing Community"
   },
