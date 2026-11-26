@@ -24,6 +24,24 @@ const useResizable = (id: string, autoSizing = false): Resizable => {
   const blockAutoSizeRef = useMinMaxRef(id);
 
   useLayoutEffect(() => {
+    if (id === "MacMusic" && !blockAutoSizeRef.current) {
+      if (typeof window !== "undefined") {
+        const vh = window.innerHeight;
+        const vw = window.innerWidth;
+        const width = Math.min(1240, Math.max(1040, Math.round(vw * 0.85)));
+        const height = Math.min(780, Math.max(620, Math.round(vh * 0.82)));
+        if (!stateSize.width || Number(stateSize.width) < 1000) {
+          setSize({
+            height: height + titleBar.height,
+            width,
+          });
+          return;
+        }
+      }
+      setSize(minMaxSize(stateSize, lockAspectRatio, titleBar.height));
+      return;
+    }
+
     if (id === "Gakon" && !blockAutoSizeRef.current) {
       if (typeof window !== "undefined") {
         const vh = window.innerHeight;

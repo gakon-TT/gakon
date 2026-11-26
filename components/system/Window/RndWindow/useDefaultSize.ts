@@ -31,6 +31,17 @@ const useDefaultSize = (id: string): Size => {
       }
     }
 
+    if (id === "MacMusic" && typeof window !== "undefined") {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const width = Math.min(1240, Math.max(1040, Math.round(vw * 0.85)));
+      const height = Math.min(780, Math.max(620, Math.round(vh * 0.82)));
+      return {
+        height: height + titleBar.height,
+        width,
+      };
+    }
+
     return defaultSize
       ? {
           height: Number(defaultSize.height) + titleBar.height,

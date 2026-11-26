@@ -153,14 +153,14 @@ const directory: Processes = {
     title: "Messages",
   },
   MacMusic: {
-    backgroundColor: "#18181c",
+    backgroundColor: "#070d18",
     Component: dynamic(() => import("components/apps/MacMusic")),
     defaultSize: {
-      height: 600,
-      width: 940,
+      height: 740,
+      width: 1180,
     },
-    icon: "/System/Icons/music.webp",
-    title: "Music",
+    icon: "/System/Icons/gakon-music.png",
+    title: "Gakon Music",
   },
   MacNotes: {
     backgroundColor: "#1e1e20",

@@ -146,12 +146,12 @@ const PinnedDockApps: FC<PinnedDockAppsProps> = ({
         </StyledTaskbarButton>
       </DockItemWrapper>
 
-      {/* Music */}
+      {/* Gakon Music */}
       <DockItemWrapper $isRunning={Boolean(processes.MacMusic)}>
         <StyledTaskbarButton
           $active={processes.MacMusic && foregroundId === "MacMusic"}
           onClick={() => handleAppClick("MacMusic")}
-          title="Nhạc (Apple Music)"
+          title="Gakon Music"
           type="button"
         >
           <MusicIcon />

@@ -92,20 +92,17 @@ export const NotesIcon = memo(() => (
 ));
 
 export const MusicIcon = memo(() => (
-  <svg viewBox="0 0 100 100" width="40" height="40">
-    <defs>
-      <linearGradient id="musicBg" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#fc3d6f" />
-        <stop offset="100%" stopColor="#fa233b" />
-      </linearGradient>
-    </defs>
-    <rect width="100" height="100" rx="22" fill="url(#musicBg)" />
-    {/* Eighth Notes */}
-    <path
-      d="M68 25 L42 32 L42 62 C39 60 35 59 31 60 C24 62 20 68 22 74 C24 80 31 83 38 81 C43 79 46 74 46 68 L46 44 L64 39 L64 56 C61 54 57 53 53 54 C46 56 42 62 44 68 C46 74 53 77 60 75 C65 73 68 68 68 62 Z"
-      fill="#ffffff"
-    />
-  </svg>
+  <img
+    alt="Gakon Music"
+    height="40"
+    src="/System/GakonWeb/gakon-music-logo.png"
+    style={{
+      borderRadius: "10px",
+      filter: "drop-shadow(0 2px 8px rgba(0, 180, 255, 0.45))",
+      objectFit: "contain",
+    }}
+    width="40"
+  />
 ));
 
 export const TerminalIcon = memo(() => (

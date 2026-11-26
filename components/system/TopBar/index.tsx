@@ -382,7 +382,7 @@ const TopBar: FC = () => {
             }}
             type="button"
           >
-            <span>Apple Music</span>
+            <span>Gakon Music</span>
           </button>
           <button
             className="menu-entry"
@@ -738,7 +738,7 @@ const TopBar: FC = () => {
                 if (e.key === "Enter") {
                   const q = spotlightQuery.toLowerCase();
                   if (q.includes("gak") || q.includes("ga")) open("Gakon");
-                  else if (q.includes("mus") || q.includes("nhac")) open("MacMusic");
+                  else if (q.includes("mus") || q.includes("nhac") || q.includes("gakon")) open("MacMusic");
                   else if (q.includes("term")) open("Terminal");
                   else if (q.includes("file") || q.includes("find")) open("FileExplorer");
                   else open("Browser");
@@ -779,7 +779,7 @@ const TopBar: FC = () => {
             }}
             type="button"
           >
-            <span>🎵 Apple Music (US-UK)</span>
+            <span>🎵 Gakon Music</span>
           </button>
           <button
             className="menu-entry"

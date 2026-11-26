@@ -36,6 +36,19 @@ const useDraggable = (id: string, size: Size): Draggable => {
     [windowState]
   );
   const [position, setPosition] = useState<Position>(() => {
+    if (id === "MacMusic" && typeof window !== "undefined") {
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const curWidth = pxToNum(size.width);
+      const curHeight = pxToNum(size.height);
+      if (!sessionPosition || (sessionSize?.width && Number(sessionSize.width) < 1000)) {
+        return {
+          x: Math.max(20, Math.round((vw - curWidth) / 2)),
+          y: Math.max(34, Math.round((vh - curHeight) / 2) - 15),
+        };
+      }
+    }
+
     if (id === "Gakon" && typeof window !== "undefined") {
       const vh = window.innerHeight;
       const vw = window.innerWidth;

@@ -4,6 +4,8 @@ import { type Props, type RndResizeCallback } from "react-rnd";
 import { useTheme } from "styled-components";
 import { isWindowOutsideBounds } from "components/system/Window/functions";
 import rndDefaults, {
+  MIN_WINDOW_HEIGHT,
+  MIN_WINDOW_WIDTH,
   RESIZING_DISABLED,
   RESIZING_ENABLED,
 } from "components/system/Window/RndWindow/rndDefaults";
@@ -147,6 +149,8 @@ const useRnd = (id: string): Props => {
         }
       : size,
     ...rndDefaults,
+    minHeight: id === "MacMusic" ? "520px" : `${MIN_WINDOW_HEIGHT}px`,
+    minWidth: id === "MacMusic" ? "820px" : `${MIN_WINDOW_WIDTH}px`,
   };
 };
 

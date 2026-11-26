@@ -1195,13 +1195,13 @@ const Container = styled.div`
         @media (max-height: 820px), (max-width: 1440px) {
           height: 38px;
           width: 38px;
-          svg {
+          svg, img {
             height: 18px;
             width: 18px;
           }
         }
 
-        svg {
+        svg, img {
           height: 28px;
           width: 28px;
           transition: transform 0.2s ease;
@@ -1211,7 +1211,7 @@ const Container = styled.div`
           transform: translateY(-5px) scale(1.1);
           border-color: rgba(255, 255, 255, 0.45);
 
-          svg {
+          svg, img {
             transform: scale(1.12);
           }
         }
@@ -1222,10 +1222,10 @@ const Container = styled.div`
           box-shadow: 0 0 28px rgba(88, 101, 242, 0.65), 0 12px 30px rgba(0, 0, 0, 0.5);
         }
 
-        &.spotify:hover {
-          background: rgba(29, 185, 84, 0.28);
-          border-color: #1db954;
-          box-shadow: 0 0 28px rgba(29, 185, 84, 0.65), 0 12px 30px rgba(0, 0, 0, 0.5);
+        &.gakon-music:hover {
+          background: rgba(0, 180, 255, 0.28);
+          border-color: #00d2ff;
+          box-shadow: 0 0 28px rgba(0, 210, 255, 0.65), 0 12px 30px rgba(0, 0, 0, 0.5);
         }
 
         &.facebook:hover {
@@ -1746,11 +1746,12 @@ const Gakon: FC<ComponentProcessProps> = () => {
     let pollInterval: NodeJS.Timeout | null = null;
 
     const initYt = () => {
-      if (!window.YT || !window.YT.Player) return;
+      const win = window as any;
+      if (!win.YT || !win.YT.Player) return;
       if (ytPlayerRef.current) return;
 
       try {
-        ytPlayerRef.current = new window.YT.Player("gakon-yt-player-slot", {
+        ytPlayerRef.current = new win.YT.Player("gakon-yt-player-slot", {
           width: "100%",
           height: "100%",
           videoId: currentTrackRef.current?.youtubeId || "fHI8X4OXluQ",
@@ -1832,7 +1833,8 @@ const Gakon: FC<ComponentProcessProps> = () => {
       }
     };
 
-    if (window.YT && window.YT.Player) {
+    const win = window as any;
+    if (win.YT && win.YT.Player) {
       setTimeout(initYt, 50);
     } else {
       if (!document.getElementById("yt-iframe-api-script")) {
@@ -1841,15 +1843,15 @@ const Gakon: FC<ComponentProcessProps> = () => {
         tag.src = "https://www.youtube.com/iframe_api";
         document.body.appendChild(tag);
       }
-      const prevOnReady = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
+      const prevOnReady = win.onYouTubeIframeAPIReady;
+      win.onYouTubeIframeAPIReady = () => {
         if (typeof prevOnReady === "function") prevOnReady();
         setTimeout(initYt, 50);
       };
 
       // Periodic check in case script was already loaded by another component
       pollInterval = setInterval(() => {
-        if (window.YT && window.YT.Player) {
+        if (win.YT && win.YT.Player) {
           if (pollInterval) clearInterval(pollInterval);
           initYt();
         }
@@ -2468,21 +2470,28 @@ const Gakon: FC<ComponentProcessProps> = () => {
 
               <div className="social-item-col">
                 <a
-                  className="social-circle-btn spotify"
-                  href="https://open.spotify.com/user/31hfwjh4pvtpsiz5wujs6fnkb4ai?si=79c4d27140014c82"
+                  className="social-circle-btn gakon-music"
+                  href="https://music.gakon.dev/"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    showToast("🎧 Đang mở Spotify: _gakon");
+                    showToast("🎵 Đang mở Gakon Music: music.gakon.dev");
                   }}
-                  title="Spotify: _gakon"
+                  title="Gakon Music: https://music.gakon.dev/"
                 >
-                  <svg viewBox="0 0 24 24" fill="#1db954">
-                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.503 17.308c-.218.358-.684.474-1.042.256-2.86-1.747-6.46-2.143-10.7-1.173-.41.094-.816-.164-.91-.574-.094-.41.164-.816.574-.91 4.636-1.06 8.604-.616 11.822 1.359.358.218.474.684.256 1.042zm1.47-3.264c-.276.448-.864.59-1.312.314-3.274-2.012-8.266-2.595-12.138-1.419-.504.153-1.041-.133-1.194-.637-.153-.504.133-1.041.637-1.194 4.428-1.344 9.923-.695 13.693 1.624.448.276.59.864.314 1.312zm.126-3.41c-3.926-2.332-10.395-2.547-14.152-1.406-.602.183-1.24-.162-1.423-.764-.183-.602.162-1.24.764-1.423 4.316-1.31 11.455-1.055 15.969 1.623.542.321.722 1.022.4 1.564-.321.542-1.022.722-1.564.4z" />
-                  </svg>
+                  <img
+                    src="/System/GakonWeb/gakon-music-logo.png"
+                    alt="Gakon Music"
+                    style={{
+                      height: "32px",
+                      width: "32px",
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 0 6px rgba(0, 210, 255, 0.75))",
+                    }}
+                  />
                 </a>
-                <span className="social-label">Spotify</span>
+                <span className="social-label">Gakon Music</span>
               </div>
 
               <div className="social-item-col">
